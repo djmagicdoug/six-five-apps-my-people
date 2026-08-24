@@ -1,4 +1,5 @@
 <title>My People</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
     --bg: #f7f7f4;
@@ -397,6 +398,20 @@
   ::selection { background: var(--gold-wash); }
   @media (prefers-reduced-motion: reduce) {
     .drawer, .scrim { transition: none; }
+  } 
+    @media (max-width: 640px) {
+    body { flex-direction: column; }
+    .sidebar {
+      position: sticky; top: 0; width: 100%; height: auto; flex: 0 0 auto;
+      flex-direction: row; align-items: center; gap: 8px;
+      padding: 10px 14px; z-index: 30;
+    }
+    .brand-sub { display: none; }
+    .nav { flex-direction: row; gap: 2px; overflow-x: auto; }
+    .nav-btn { padding: 8px 10px; font-size: 13px; white-space: nowrap; }
+    .sidebar-foot { margin-left: auto; padding: 0 4px; font-size: 10px; }
+    .main { padding: 18px 16px 48px; max-width: 100%; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
   }
 </style>
 
