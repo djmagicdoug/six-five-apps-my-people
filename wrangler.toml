@@ -5,4 +5,4 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "six-five-apps-my-people"
-database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
+database_id = "7b7792dd-6498-494a-9a2a-b337c636e663"
