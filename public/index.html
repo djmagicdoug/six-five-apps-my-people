@@ -1,0 +1,1156 @@
+<title>My People</title>
+<style>
+  :root {
+    --bg: #f7f7f4;
+    --surface: #ffffff;
+    --surface-2: #faf9f6;
+    --ink: #363428;
+    --ink-soft: #6e6759;
+    --ink-faint: #a39b8b;
+    --border: #e6e1d8;
+    --gold: #b3995b;
+    --gold-wash: rgba(179,153,91,0.14);
+    --orange: #c65e2d;
+    --orange-wash: rgba(198,94,45,0.12);
+    --danger: #9c3f34;
+    --danger-wash: rgba(156,63,52,0.1);
+    --success: #4c7a4c;
+    --success-wash: rgba(76,122,76,0.12);
+    --sidebar-bg: #363428;
+    --sidebar-text: #f4f1ea;
+    --sidebar-text-soft: #b6ac98;
+    --sidebar-active: rgba(179,153,91,0.22);
+    --scrim: rgba(30,28,22,0.45);
+    --shadow: 0 12px 28px -8px rgba(54,52,40,0.22);
+    --radius: 10px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #201e19;
+      --surface: #2a2822;
+      --surface-2: #2f2c25;
+      --ink: #f1ede4;
+      --ink-soft: #b8ae9d;
+      --ink-faint: #8a8272;
+      --border: #454035;
+      --gold: #cbb07a;
+      --gold-wash: rgba(203,176,122,0.16);
+      --orange: #dd8556;
+      --orange-wash: rgba(221,133,86,0.16);
+      --danger: #c96a5c;
+      --danger-wash: rgba(201,106,92,0.16);
+      --success: #7ba97b;
+      --success-wash: rgba(123,169,123,0.16);
+      --sidebar-bg: #16140f;
+      --sidebar-text: #f1ede4;
+      --sidebar-text-soft: #a49a87;
+      --sidebar-active: rgba(203,176,122,0.2);
+      --scrim: rgba(0,0,0,0.55);
+      --shadow: 0 12px 28px -8px rgba(0,0,0,0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #201e19;
+    --surface: #2a2822;
+    --surface-2: #2f2c25;
+    --ink: #f1ede4;
+    --ink-soft: #b8ae9d;
+    --ink-faint: #8a8272;
+    --border: #454035;
+    --gold: #cbb07a;
+    --gold-wash: rgba(203,176,122,0.16);
+    --orange: #dd8556;
+    --orange-wash: rgba(221,133,86,0.16);
+    --danger: #c96a5c;
+    --danger-wash: rgba(201,106,92,0.16);
+    --success: #7ba97b;
+    --success-wash: rgba(123,169,123,0.16);
+    --sidebar-bg: #16140f;
+    --sidebar-text: #f1ede4;
+    --sidebar-text-soft: #a49a87;
+    --sidebar-active: rgba(203,176,122,0.2);
+    --scrim: rgba(0,0,0,0.55);
+    --shadow: 0 12px 28px -8px rgba(0,0,0,0.5);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    display: flex;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .serif { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
+  h1 { font-size: 26px; text-wrap: balance; }
+  h2 { font-size: 18px; }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 11px;
+    color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 64px; }
+  input:focus, select:focus, textarea:focus, button:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 1px;
+    border-color: var(--orange);
+  }
+  label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  .field + .field { margin-top: 12px; }
+  .field-row { display: flex; gap: 12px; }
+  .field-row .field { flex: 1 1 0; }
+
+  .client-toggle-row {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .toggle-label {
+    display: flex; align-items: center; gap: 9px; cursor: pointer;
+    font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ink);
+    margin-bottom: 0;
+  }
+  .toggle-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--orange); cursor: pointer; }
+  .checklist { display: flex; flex-direction: column; gap: 7px; }
+  .service-row {
+    border: 1px solid var(--border); border-radius: 8px; background: var(--surface);
+    padding: 9px 12px;
+  }
+  .service-row.checked { border-color: var(--gold); background: var(--gold-wash); }
+  .service-row .service-main {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    font-size: 13.5px; font-weight: 500; color: var(--ink);
+  }
+  .service-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--orange); cursor: pointer; flex-shrink: 0; }
+  .service-sub { display: none; gap: 8px; margin-top: 9px; padding-left: 23px; }
+  .service-row.checked .service-sub { display: flex; }
+  .service-sub select, .service-sub input[type="date"] { font-size: 13px; padding: 7px 9px; }
+  .service-sub .sub-field { flex: 1 1 0; }
+  .service-sub .sub-field-label { font-size: 10px; color: var(--ink-faint); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .service-pill {
+    display: inline-block; font-size: 11px; font-weight: 600; color: var(--gold);
+    background: var(--gold-wash); padding: 2px 8px; border-radius: 999px; margin: 0 4px 4px 0;
+  }
+  .client-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+    color: var(--orange); background: var(--orange-wash); padding: 2px 8px; border-radius: 999px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    flex: 0 0 214px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    padding: 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  .brand { padding: 0 10px; }
+  .brand-mark { font-family: Georgia, serif; font-size: 19px; letter-spacing: 0.3px; }
+  .brand-sub {
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 3px;
+  }
+  .nav { display: flex; flex-direction: column; gap: 3px; }
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: left;
+    color: var(--sidebar-text-soft);
+    cursor: pointer;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+  .nav-btn:hover { color: var(--sidebar-text); }
+  .nav-btn.active { background: var(--sidebar-active); color: var(--gold); font-weight: 700; }
+  .nav-icon { width: 17px; text-align: center; flex-shrink: 0; }
+  .nav-count {
+    margin-left: auto;
+    font-size: 11.5px;
+    background: rgba(255,255,255,0.08);
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-btn.active .nav-count { background: rgba(179,153,91,0.28); }
+  .sidebar-foot {
+    margin-top: auto;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--sidebar-text-soft);
+    opacity: 0.6;
+    padding: 0 10px;
+  }
+
+  /* Main */
+  .main { flex: 1 1 auto; min-width: 0; padding: 30px 36px 64px; max-width: 980px; }
+  .topbar { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+  .topdate { font-size: 13px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--orange); color: #fff; }
+  .btn-primary:hover { filter: brightness(0.93); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--ink-soft); }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--ink); }
+  .btn-text {
+    background: transparent; border: none; color: var(--ink-faint); cursor: pointer;
+    font-size: 13px; padding: 4px 6px; text-decoration: underline; text-underline-offset: 2px;
+  }
+  .btn-text:hover { color: var(--danger); }
+  .btn-sm { padding: 6px 11px; font-size: 12.5px; border-radius: 6px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .card + .card { margin-top: 14px; }
+
+  /* Home */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .stat-num { font-family: Georgia, serif; font-size: 28px; font-variant-numeric: tabular-nums; }
+  .stat-label { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .home-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; } .stat-row { grid-template-columns: 1fr 1fr; } }
+
+  .agenda-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agenda-item:last-child { border-bottom: none; }
+  .agenda-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .agenda-dot.overdue { background: var(--danger); }
+  .agenda-dot.today { background: var(--orange); }
+  .agenda-dot.event { background: var(--gold); }
+  .agenda-dot.renewal { background: var(--success); }
+  .agenda-text { font-size: 14px; }
+  .agenda-meta { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+  .empty-line { color: var(--ink-faint); font-size: 13.5px; padding: 6px 0; }
+
+  .note-line { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .note-line:last-child { border-bottom: none; }
+  .note-text { font-size: 14px; white-space: pre-wrap; word-break: break-word; }
+  .note-meta { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+  .client-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    background: var(--gold-wash);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-left: 6px;
+  }
+
+  /* Tabs (Admin) */
+  .tabbar { display: flex; gap: 6px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 18px; }
+  .tabbtn {
+    flex: 1 1 0;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .tabbtn.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+  .tabbtn .nav-count { background: var(--border); color: var(--ink-soft); }
+  .tabbtn.active .nav-count { background: var(--orange-wash); color: var(--orange); }
+
+  .add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .add-row input[type="text"] { flex: 2 1 220px; }
+  .add-row input[type="date"] { flex: 1 1 140px; }
+  .add-row input[type="time"] { flex: 1 1 110px; }
+  .add-row select { flex: 1 1 150px; }
+
+  .list-group-label {
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--ink-faint); margin: 18px 0 8px;
+  }
+  .list-group-label:first-child { margin-top: 4px; }
+
+  .todo-row {
+    display: flex; align-items: flex-start; gap: 11px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .todo-row:last-child { border-bottom: none; }
+  .todo-check {
+    width: 19px; height: 19px; border-radius: 5px; border: 1.5px solid var(--border);
+    background: var(--surface); cursor: pointer; flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px;
+  }
+  .todo-row.done .todo-check { background: var(--success); border-color: var(--success); }
+  .todo-row.done .todo-text { text-decoration: line-through; color: var(--ink-faint); }
+  .todo-body { flex: 1 1 auto; min-width: 0; }
+  .todo-text { font-size: 14.5px; }
+  .todo-meta { font-size: 12px; color: var(--ink-faint); margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .todo-meta.overdue { color: var(--danger); font-weight: 600; }
+
+  .event-row { display: flex; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .event-row:last-child { border-bottom: none; }
+  .event-date {
+    flex-shrink: 0; width: 54px; text-align: center; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 4px;
+  }
+  .event-date .d { font-size: 17px; font-family: Georgia, serif; font-variant-numeric: tabular-nums; }
+  .event-date .m { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-faint); }
+  .event-title { font-size: 14.5px; margin-top: 2px; }
+
+  /* Clients table */
+  .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .toolbar input[type="text"] { flex: 1 1 240px; }
+  table.clients { width: 100%; border-collapse: collapse; }
+  table.clients th {
+    text-align: left; font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600; padding: 0 10px 8px; border-bottom: 1px solid var(--border);
+  }
+  table.clients td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+  table.clients tbody tr { cursor: pointer; }
+  table.clients tbody tr:hover td { background: var(--surface-2); }
+  .cell-name { font-weight: 600; }
+  .cell-sub { font-size: 12.5px; color: var(--ink-faint); margin-top: 2px; }
+  .table-wrap { overflow-x: auto; }
+
+  /* Drawer */
+  .scrim {
+    position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none;
+    transition: opacity 0.18s ease; z-index: 40;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: 400px; max-width: 92vw;
+    background: var(--surface); border-left: 1px solid var(--border); box-shadow: var(--shadow);
+    transform: translateX(100%); transition: transform 0.2s ease; z-index: 41;
+    display: flex; flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+    padding: 20px 22px 14px; border-bottom: 1px solid var(--border);
+  }
+  .drawer-close { background: transparent; border: none; color: var(--ink-faint); font-size: 20px; cursor: pointer; line-height: 1; padding: 4px; }
+  .drawer-close:hover { color: var(--ink); }
+  .drawer-body { padding: 18px 22px; overflow-y: auto; flex: 1 1 auto; }
+  .drawer-foot { padding: 14px 22px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .drawer-section-title { font-family: Georgia, serif; font-size: 15px; margin: 22px 0 10px; }
+
+  .empty-state { text-align: center; padding: 44px 20px; color: var(--ink-faint); }
+  .empty-state strong { display: block; font-family: Georgia, serif; font-size: 17px; color: var(--ink); margin-bottom: 6px; }
+
+  .boot-error { margin: 24px 36px; }
+
+  ::selection { background: var(--gold-wash); }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer, .scrim { transition: none; }
+  }
+</style>
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">my people</div>
+    <div class="brand-sub">six five apps</div>
+  </div>
+  <nav class="nav" id="nav">
+    <button class="nav-btn" data-view="home"><span class="nav-icon" aria-hidden="true">&#8962;</span> Home</button>
+    <button class="nav-btn" data-view="admin"><span class="nav-icon" aria-hidden="true">&#9776;</span> Admin<span class="nav-count" id="navAdminCount">0</span></button>
+    <button class="nav-btn" data-view="clients"><span class="nav-icon" aria-hidden="true">&#9679;</span> Contacts<span class="nav-count" id="navClientsCount">0</span></button>
+  </nav>
+  <div class="sidebar-foot">my people</div>
+</div>
+
+<div class="main">
+
+  <!-- HOME -->
+  <section id="view-home">
+    <div class="topbar">
+      <h1>Home</h1>
+      <div class="topdate" id="todayLabel"></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num" id="statContacts">0</div><div class="stat-label">Contacts</div></div>
+      <div class="stat"><div class="stat-num" id="statClients">0</div><div class="stat-label">Clients</div></div>
+      <div class="stat"><div class="stat-num" id="statTodos">0</div><div class="stat-label">Open to-dos</div></div>
+      <div class="stat"><div class="stat-num" id="statEvents">0</div><div class="stat-label">On the calendar today</div></div>
+    </div>
+    <div class="home-grid">
+      <div class="card">
+        <h2>What's due</h2>
+        <div id="homeAgenda"></div>
+      </div>
+      <div class="card">
+        <h2>Recent notes</h2>
+        <div id="homeNotes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="view-admin" style="display:none;">
+    <div class="topbar">
+      <h1>Admin</h1>
+      <div class="topdate" id="todayLabel2"></div>
+    </div>
+    <div class="tabbar" id="adminTabs">
+      <button class="tabbtn active" data-tab="todo">To-Do<span class="nav-count" id="tabTodoCount">0</span></button>
+      <button class="tabbtn" data-tab="notes">Notes<span class="nav-count" id="tabNotesCount">0</span></button>
+      <button class="tabbtn" data-tab="calendar">Calendar<span class="nav-count" id="tabCalCount">0</span></button>
+    </div>
+
+    <div id="pane-todo">
+      <div class="card">
+        <div class="add-row">
+          <input type="text" id="todoInput" placeholder="Call Hannah about the profile listing">
+          <input type="date" id="todoDate">
+          <select id="todoClient"><option value="">No client</option></select>
+          <button class="btn btn-primary" id="todoAddBtn">Add</button>
+        </div>
+      </div>
+      <div class="card" id="todoListCard" style="margin-top:14px;">
+        <div id="todoList"></div>
+      </div>
+    </div>
+
+    <div id="pane-notes" style="display:none;">
+      <div class="card">
+        <div class="add-row">
+          <input type="text" id="noteInput" placeholder="Talked to Erik, he liked the new pricing">
+          <select id="noteClient"><option value="">No client</option></select>
+          <button class="btn btn-primary" id="noteAddBtn">Add</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div id="noteList"></div>
+      </div>
+    </div>
+
+    <div id="pane-calendar" style="display:none;">
+      <div class="card">
+        <div class="add-row">
+          <input type="text" id="eventInput" placeholder="Coffee with Carlos">
+          <input type="date" id="eventDate">
+          <input type="time" id="eventTime">
+          <select id="eventClient"><option value="">No client</option></select>
+          <button class="btn btn-primary" id="eventAddBtn">Add</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div id="eventList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="view-clients" style="display:none;">
+    <div class="topbar">
+      <h1>Contacts</h1>
+      <button class="btn btn-primary" id="addClientBtn">+ Add contact</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="clientSearch" placeholder="Search by name, company, email, or phone">
+      <select id="clientFilter">
+        <option value="all">Everyone</option>
+        <option value="clients">Clients only</option>
+        <option value="contacts">Contacts only (not a client)</option>
+      </select>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="clients" id="clientsTable">
+          <thead>
+            <tr><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>Services</th><th>Last note</th></tr>
+          </thead>
+          <tbody id="clientsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Drawer for client add/edit -->
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer" role="dialog" aria-label="Client detail">
+  <div class="drawer-head">
+    <div>
+      <h2 id="drawerTitle">Add client</h2>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <label for="cName">Name</label>
+      <input type="text" id="cName" placeholder="Full name">
+    </div>
+    <div class="field">
+      <label for="cCompany">Company</label>
+      <input type="text" id="cCompany" placeholder="Optional">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="cEmail">Email</label>
+        <input type="email" id="cEmail">
+      </div>
+      <div class="field">
+        <label for="cPhone">Phone</label>
+        <input type="tel" id="cPhone">
+      </div>
+    </div>
+    <div class="field">
+      <label for="cAddress">Address</label>
+      <input type="text" id="cAddress" placeholder="Optional">
+    </div>
+
+    <div class="field client-toggle-row">
+      <label class="toggle-label" for="cIsClient">
+        <input type="checkbox" id="cIsClient">
+        <span>Mark as a client</span>
+      </label>
+    </div>
+    <div class="field" id="servicesField" style="display:none;">
+      <label>Services</label>
+      <div class="checklist" id="servicesChecklist"></div>
+    </div>
+
+    <div id="drawerLogSection" style="display:none;">
+      <div class="drawer-section-title">Log</div>
+      <div class="add-row">
+        <input type="text" id="drawerNoteInput" placeholder="Called, left a voicemail">
+        <button class="btn btn-primary btn-sm" id="drawerNoteAddBtn">Add</button>
+      </div>
+      <div id="drawerNoteList" style="margin-top:8px;"></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-text" id="drawerDeleteBtn" style="display:none;">Delete client</button>
+    <button class="btn btn-primary" id="drawerSaveBtn">Save</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var API = "/api";
+  var data = { clients: [], todos: [], notes: [], events: [] };
+  var editingClientId = null;
+  var SERVICES = ["Snapshot", "Corkboard", "Creatives", "Home Cooking", "DJ", "Digital Business Card"];
+
+  /* ---------- API helper ---------- */
+  async function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+    var res = await fetch(API + path, opts);
+    if (!res.ok) {
+      var msg = "Something went wrong (" + res.status + ")";
+      try { var errBody = await res.json(); if (errBody && errBody.error) msg = errBody.error; } catch (e) {}
+      throw new Error(msg);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+  }
+  async function loadAll() {
+    var results = await Promise.all([
+      api("/contacts"), api("/todos"), api("/notes"), api("/events")
+    ]);
+    data = { clients: results[0], todos: results[1], notes: results[2], events: results[3] };
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function fmtLong(iso) {
+    if (!iso) return "";
+    var parts = iso.split("-");
+    var d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  }
+  function fmtTime(hhmm) {
+    if (!hhmm) return "";
+    var bits = hhmm.split(":");
+    var h = Number(bits[0]);
+    var m = bits[1];
+    var suffix = h >= 12 ? "pm" : "am";
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ":" + m + suffix;
+  }
+  function fmtShort(iso) {
+    if (!iso) return "";
+    var parts = iso.split("-");
+    var d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+  function parseISO(iso) {
+    var p = iso.split("-");
+    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  }
+  function toISO(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function nextRenewal(startISO, frequency) {
+    if (!startISO) return null;
+    var start = parseISO(startISO);
+    var today = parseISO(todayISO());
+    var next = new Date(start.getTime());
+    if (frequency === "annual") {
+      next.setFullYear(today.getFullYear());
+      if (next < today) next.setFullYear(today.getFullYear() + 1);
+    } else {
+      next.setFullYear(today.getFullYear());
+      next.setMonth(today.getMonth());
+      if (next < today) next.setMonth(today.getMonth() + 1);
+    }
+    return next;
+  }
+  function clientName(id) {
+    var c = data.clients.find(function (x) { return x.id === id; });
+    return c ? c.name : "";
+  }
+  function warn(err) {
+    alert(err && err.message ? err.message : "Something went wrong. Try again.");
+  }
+
+  /* ---------- Navigation ---------- */
+  var views = ["home", "admin", "clients"];
+  function showView(v) {
+    views.forEach(function (name) {
+      document.getElementById("view-" + name).style.display = name === v ? "block" : "none";
+    });
+    document.querySelectorAll(".nav-btn").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-view") === v);
+    });
+    if (v === "home") renderHome();
+    if (v === "clients") renderClients();
+  }
+  document.getElementById("nav").addEventListener("click", function (e) {
+    var btn = e.target.closest(".nav-btn");
+    if (btn) showView(btn.getAttribute("data-view"));
+  });
+
+  var adminTabs = ["todo", "notes", "calendar"];
+  function showTab(t) {
+    adminTabs.forEach(function (name) {
+      document.getElementById("pane-" + name).style.display = name === t ? "block" : "none";
+    });
+    document.querySelectorAll(".tabbtn").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-tab") === t);
+    });
+  }
+  document.getElementById("adminTabs").addEventListener("click", function (e) {
+    var btn = e.target.closest(".tabbtn");
+    if (btn) showTab(btn.getAttribute("data-tab"));
+  });
+
+  var todayLabelText = fmtLong(todayISO());
+  document.getElementById("todayLabel").textContent = todayLabelText;
+  document.getElementById("todayLabel2").textContent = todayLabelText;
+
+  /* ---------- Client dropdown population ---------- */
+  function fillClientSelects() {
+    var selects = [document.getElementById("todoClient"), document.getElementById("noteClient"), document.getElementById("eventClient")];
+    selects.forEach(function (sel) {
+      var current = sel.value;
+      sel.innerHTML = '<option value="">No client</option>' + data.clients
+        .slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+        .map(function (c) { return '<option value="' + c.id + '">' + esc(c.name) + '</option>'; }).join("");
+      if (current) sel.value = current;
+    });
+  }
+
+  /* ---------- Counts ---------- */
+  function refreshCounts() {
+    var openTodos = data.todos.filter(function (t) { return !t.done; }).length;
+    document.getElementById("navAdminCount").textContent = openTodos;
+    document.getElementById("navClientsCount").textContent = data.clients.length;
+    document.getElementById("tabTodoCount").textContent = openTodos;
+    document.getElementById("tabNotesCount").textContent = data.notes.length;
+    document.getElementById("tabCalCount").textContent = data.events.length;
+  }
+
+  /* ---------- Services checklist ---------- */
+  function buildServicesChecklist() {
+    var el = document.getElementById("servicesChecklist");
+    el.innerHTML = SERVICES.map(function (s, i) {
+      var id = "svc" + i;
+      return '<div class="service-row" data-row="' + esc(s) + '">' +
+        '<label class="service-main" for="' + id + '"><input type="checkbox" class="service-check" id="' + id + '" value="' + esc(s) + '"> ' + esc(s) + '</label>' +
+        '<div class="service-sub">' +
+          '<div class="sub-field"><div class="sub-field-label">Billing</div>' +
+            '<select class="service-freq"><option value="monthly">Monthly</option><option value="annual">Annual</option></select></div>' +
+          '<div class="sub-field"><div class="sub-field-label">Start date</div>' +
+            '<input type="date" class="service-start"></div>' +
+        '</div></div>';
+    }).join("");
+    el.querySelectorAll(".service-check").forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        cb.closest(".service-row").classList.toggle("checked", cb.checked);
+      });
+    });
+  }
+  function getCheckedServices() {
+    var rows = document.querySelectorAll("#servicesChecklist .service-row");
+    var out = [];
+    rows.forEach(function (row) {
+      var cb = row.querySelector(".service-check");
+      if (cb.checked) {
+        out.push({
+          name: cb.value,
+          frequency: row.querySelector(".service-freq").value,
+          start: row.querySelector(".service-start").value
+        });
+      }
+    });
+    return out;
+  }
+  function setCheckedServices(list) {
+    list = list || [];
+    document.querySelectorAll("#servicesChecklist .service-row").forEach(function (row) {
+      var cb = row.querySelector(".service-check");
+      var match = list.find ? list.find(function (s) { return (s.name || s) === cb.value; }) : null;
+      cb.checked = !!match;
+      row.classList.toggle("checked", !!match);
+      row.querySelector(".service-freq").value = (match && match.frequency) || "monthly";
+      row.querySelector(".service-start").value = (match && match.start) || "";
+    });
+  }
+  document.getElementById("cIsClient").addEventListener("change", function () {
+    document.getElementById("servicesField").style.display = this.checked ? "block" : "none";
+  });
+
+  /* ---------- HOME ---------- */
+  function renderHome() {
+    var today = todayISO();
+    document.getElementById("statContacts").textContent = data.clients.length;
+    document.getElementById("statClients").textContent = data.clients.filter(function (c) { return c.isClient; }).length;
+    document.getElementById("statTodos").textContent = data.todos.filter(function (t) { return !t.done; }).length;
+    document.getElementById("statEvents").textContent = data.events.filter(function (e) { return e.date === today; }).length;
+
+    var agendaItems = [];
+    data.todos.filter(function (t) { return !t.done && t.due && t.due <= today; }).forEach(function (t) {
+      agendaItems.push({ kind: t.due < today ? "overdue" : "today", sort: t.due, text: t.text, meta: (t.due < today ? "overdue, was due " : "due ") + fmtShort(t.due) + (t.clientId ? " · " + clientName(t.clientId) : "") });
+    });
+    data.events.filter(function (e) { return e.date === today; }).forEach(function (e) {
+      agendaItems.push({ kind: "event", sort: e.date + " " + (e.time || "00:00"), text: e.title, meta: (e.time ? fmtTime(e.time) : "today") + (e.clientId ? " · " + clientName(e.clientId) : "") });
+    });
+    data.clients.filter(function (c) { return c.isClient; }).forEach(function (c) {
+      (c.services || []).forEach(function (s) {
+        if (!s || !s.start) return;
+        var next = nextRenewal(s.start, s.frequency);
+        if (!next) return;
+        var daysUntil = Math.round((next - parseISO(today)) / 86400000);
+        if (daysUntil >= 0 && daysUntil <= 30) {
+          agendaItems.push({
+            kind: "renewal", sort: toISO(next),
+            text: c.name + " — " + s.name + " renews",
+            meta: (s.frequency === "annual" ? "annual" : "monthly") + " · " + (daysUntil === 0 ? "today" : daysUntil === 1 ? "in 1 day" : "in " + daysUntil + " days")
+          });
+        }
+      });
+    });
+    agendaItems.sort(function (a, b) { return a.sort < b.sort ? -1 : a.sort > b.sort ? 1 : 0; });
+
+    var agendaEl = document.getElementById("homeAgenda");
+    if (agendaItems.length === 0) {
+      agendaEl.innerHTML = '<div class="empty-line">Nothing overdue or due today. Clear runway.</div>';
+    } else {
+      agendaEl.innerHTML = agendaItems.map(function (i) {
+        return '<div class="agenda-item"><span class="agenda-dot ' + i.kind + '" aria-hidden="true"></span>' +
+          '<div><div class="agenda-text">' + esc(i.text) + '</div><div class="agenda-meta">' + esc(i.meta) + '</div></div></div>';
+      }).join("");
+    }
+
+    var recentNotes = data.notes.slice().sort(function (a, b) { return b.createdAt - a.createdAt; }).slice(0, 5);
+    var notesEl = document.getElementById("homeNotes");
+    if (recentNotes.length === 0) {
+      notesEl.innerHTML = '<div class="empty-line">No notes logged yet.</div>';
+    } else {
+      notesEl.innerHTML = recentNotes.map(function (n) {
+        return '<div class="note-line"><div class="note-text">' + esc(n.text) +
+          (n.clientId ? '<span class="client-tag">' + esc(clientName(n.clientId)) + '</span>' : '') + '</div>' +
+          '<div class="note-meta">' + fmtShort(n.date) + '</div></div>';
+      }).join("");
+    }
+  }
+
+  /* ---------- TO-DO ---------- */
+  function renderTodos() {
+    var today = todayISO();
+    var groups = { overdue: [], today: [], upcoming: [], done: [] };
+    data.todos.forEach(function (t) {
+      if (t.done) { groups.done.push(t); return; }
+      if (!t.due) { groups.upcoming.push(t); return; }
+      if (t.due < today) groups.overdue.push(t);
+      else if (t.due === today) groups.today.push(t);
+      else groups.upcoming.push(t);
+    });
+    ["overdue", "today", "upcoming"].forEach(function (g) {
+      groups[g].sort(function (a, b) { return (a.due || "9999") < (b.due || "9999") ? -1 : 1; });
+    });
+    groups.done.sort(function (a, b) { return b.createdAt - a.createdAt; });
+
+    var labels = { overdue: "Overdue", today: "Today", upcoming: "Upcoming", done: "Done" };
+    var order = ["overdue", "today", "upcoming", "done"];
+    var html = "";
+    order.forEach(function (g) {
+      if (groups[g].length === 0) return;
+      html += '<div class="list-group-label">' + labels[g] + '</div>';
+      html += groups[g].map(function (t) {
+        var overdueClass = (!t.done && t.due && t.due < today) ? " overdue" : "";
+        return '<div class="todo-row' + (t.done ? " done" : "") + '">' +
+          '<button class="todo-check" data-toggle="' + t.id + '" aria-label="Mark done">' + (t.done ? "&#10003;" : "") + '</button>' +
+          '<div class="todo-body"><div class="todo-text">' + esc(t.text) + '</div>' +
+          '<div class="todo-meta' + overdueClass + '">' + (t.due ? fmtShort(t.due) : "no due date") + (t.clientId ? " · " + esc(clientName(t.clientId)) : "") + '</div></div>' +
+          '<button class="btn-text" data-del="' + t.id + '">remove</button>' +
+          '</div>';
+      }).join("");
+    });
+    if (data.todos.length === 0) {
+      html = '<div class="empty-state"><strong>Nothing on the list</strong>Add something above and it will show up here.</div>';
+    }
+    document.getElementById("todoList").innerHTML = html;
+  }
+  document.getElementById("todoAddBtn").addEventListener("click", async function () {
+    var input = document.getElementById("todoInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    var due = document.getElementById("todoDate").value;
+    var clientId = document.getElementById("todoClient").value || null;
+    try {
+      var created = await api("/todos", { method: "POST", body: JSON.stringify({ text: text, due: due, clientId: clientId }) });
+      data.todos.push(created);
+      input.value = ""; document.getElementById("todoDate").value = ""; document.getElementById("todoClient").value = "";
+      renderTodos(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("todoList").addEventListener("click", async function (e) {
+    var toggle = e.target.closest("[data-toggle]");
+    var del = e.target.closest("[data-del]");
+    try {
+      if (toggle) {
+        var id = toggle.getAttribute("data-toggle");
+        var t = data.todos.find(function (x) { return x.id === id; });
+        if (!t) return;
+        var updated = await api("/todos/" + id, { method: "PATCH", body: JSON.stringify({ done: !t.done }) });
+        t.done = updated.done;
+        renderTodos(); refreshCounts();
+      }
+      if (del) {
+        var delId = del.getAttribute("data-del");
+        await api("/todos/" + delId, { method: "DELETE" });
+        data.todos = data.todos.filter(function (x) { return x.id !== delId; });
+        renderTodos(); refreshCounts();
+      }
+    } catch (err) { warn(err); }
+  });
+
+  /* ---------- NOTES ---------- */
+  function renderNotesList(targetEl, notes, allowClientTag) {
+    if (notes.length === 0) {
+      targetEl.innerHTML = '<div class="empty-line">Nothing logged yet.</div>';
+      return;
+    }
+    targetEl.innerHTML = notes.map(function (n) {
+      return '<div class="note-line"><div class="note-text">' + esc(n.text) +
+        (allowClientTag && n.clientId ? '<span class="client-tag">' + esc(clientName(n.clientId)) + '</span>' : '') + '</div>' +
+        '<div class="note-meta">' + fmtShort(n.date) + ' &nbsp;&middot;&nbsp; <button class="btn-text" data-delnote="' + n.id + '" style="padding:0;">remove</button></div></div>';
+    }).join("");
+  }
+  function renderNotes() {
+    var sorted = data.notes.slice().sort(function (a, b) { return b.createdAt - a.createdAt; });
+    renderNotesList(document.getElementById("noteList"), sorted, true);
+  }
+  document.getElementById("noteAddBtn").addEventListener("click", async function () {
+    var input = document.getElementById("noteInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    var clientId = document.getElementById("noteClient").value || null;
+    try {
+      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), clientId: clientId }) });
+      data.notes.push(created);
+      input.value = ""; document.getElementById("noteClient").value = "";
+      renderNotes(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("noteList").addEventListener("click", async function (e) {
+    var del = e.target.closest("[data-delnote]");
+    if (!del) return;
+    try {
+      var id = del.getAttribute("data-delnote");
+      await api("/notes/" + id, { method: "DELETE" });
+      data.notes = data.notes.filter(function (x) { return x.id !== id; });
+      renderNotes(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+
+  /* ---------- CALENDAR ---------- */
+  function renderEvents() {
+    var sorted = data.events.slice().sort(function (a, b) {
+      var ak = (a.date || "") + " " + (a.time || "00:00");
+      var bk = (b.date || "") + " " + (b.time || "00:00");
+      return ak < bk ? -1 : ak > bk ? 1 : 0;
+    });
+    var el = document.getElementById("eventList");
+    if (sorted.length === 0) {
+      el.innerHTML = '<div class="empty-state"><strong>No dates yet</strong>Add one above and it will land here in order.</div>';
+      return;
+    }
+    el.innerHTML = sorted.map(function (ev) {
+      var parts = (ev.date || "").split("-");
+      var d = parts.length === 3 ? parts[2] : "--";
+      var m = parts.length === 3 ? new Date(Number(parts[0]), Number(parts[1]) - 1, 1).toLocaleDateString(undefined, { month: "short" }) : "";
+      return '<div class="event-row"><div class="event-date"><div class="d">' + d + '</div><div class="m">' + m + '</div></div>' +
+        '<div style="flex:1;"><div class="event-title">' + esc(ev.title) + (ev.clientId ? '<span class="client-tag">' + esc(clientName(ev.clientId)) + '</span>' : '') + '</div>' +
+        (ev.time ? '<div class="note-meta">' + fmtTime(ev.time) + '</div>' : '') + '</div>' +
+        '<button class="btn-text" data-delevent="' + ev.id + '">remove</button></div>';
+    }).join("");
+  }
+  document.getElementById("eventAddBtn").addEventListener("click", async function () {
+    var input = document.getElementById("eventInput");
+    var title = input.value.trim();
+    var date = document.getElementById("eventDate").value;
+    if (!title || !date) { (title ? document.getElementById("eventDate") : input).focus(); return; }
+    var time = document.getElementById("eventTime").value;
+    var clientId = document.getElementById("eventClient").value || null;
+    try {
+      var created = await api("/events", { method: "POST", body: JSON.stringify({ title: title, date: date, time: time, clientId: clientId }) });
+      data.events.push(created);
+      input.value = ""; document.getElementById("eventDate").value = ""; document.getElementById("eventTime").value = ""; document.getElementById("eventClient").value = "";
+      renderEvents(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("eventList").addEventListener("click", async function (e) {
+    var del = e.target.closest("[data-delevent]");
+    if (!del) return;
+    try {
+      var id = del.getAttribute("data-delevent");
+      await api("/events/" + id, { method: "DELETE" });
+      data.events = data.events.filter(function (x) { return x.id !== id; });
+      renderEvents(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+
+  /* ---------- CLIENTS ---------- */
+  function renderClients() {
+    var q = document.getElementById("clientSearch").value.trim().toLowerCase();
+    var filter = document.getElementById("clientFilter").value;
+    var list = data.clients.filter(function (c) {
+      if (filter === "clients" && !c.isClient) return false;
+      if (filter === "contacts" && c.isClient) return false;
+      if (!q) return true;
+      var blob = [c.name, c.company, c.email, c.phone].join(" ").toLowerCase();
+      return blob.indexOf(q) !== -1;
+    }).slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var body = document.getElementById("clientsBody");
+    if (data.clients.length === 0) {
+      body.innerHTML = '<tr><td colspan="6"><div class="empty-state"><strong>No one here yet</strong>Add your first contact to get started.</div></td></tr>';
+      return;
+    }
+    if (list.length === 0) {
+      body.innerHTML = '<tr><td colspan="6"><div class="empty-state"><strong>No matches</strong>Try a different search or filter.</div></td></tr>';
+      return;
+    }
+    body.innerHTML = list.map(function (c) {
+      var lastNote = data.notes.filter(function (n) { return n.clientId === c.id; }).sort(function (a, b) { return b.createdAt - a.createdAt; })[0];
+      var servicesCell = c.isClient
+        ? '<span class="client-badge">Client</span> ' + (c.services || []).map(function (s) { return '<span class="service-pill">' + esc(s.name || s) + '</span>'; }).join("")
+        : '<span class="cell-sub">contact only</span>';
+      return '<tr data-open="' + c.id + '">' +
+        '<td class="cell-name">' + esc(c.name) + '</td>' +
+        '<td>' + esc(c.company || "—") + '</td>' +
+        '<td>' + esc(c.email || "—") + '</td>' +
+        '<td>' + esc(c.phone || "—") + '</td>' +
+        '<td>' + servicesCell + '</td>' +
+        '<td>' + (lastNote ? fmtShort(lastNote.date) : '<span class="cell-sub">no notes yet</span>') + '</td>' +
+        '</tr>';
+    }).join("");
+  }
+  document.getElementById("clientSearch").addEventListener("input", renderClients);
+  document.getElementById("clientFilter").addEventListener("change", renderClients);
+  document.getElementById("clientsBody").addEventListener("click", function (e) {
+    var row = e.target.closest("[data-open]");
+    if (row) openDrawer(row.getAttribute("data-open"));
+  });
+
+  /* ---------- DRAWER ---------- */
+  var drawer = document.getElementById("drawer");
+  var scrim = document.getElementById("scrim");
+
+  function openDrawer(clientId) {
+    editingClientId = clientId || null;
+    var c = clientId ? data.clients.find(function (x) { return x.id === clientId; }) : null;
+    document.getElementById("drawerTitle").textContent = c ? c.name : "Add client";
+    document.getElementById("cName").value = c ? c.name : "";
+    document.getElementById("cCompany").value = c ? c.company || "" : "";
+    document.getElementById("cEmail").value = c ? c.email || "" : "";
+    document.getElementById("cPhone").value = c ? c.phone || "" : "";
+    document.getElementById("cAddress").value = c ? c.address || "" : "";
+    document.getElementById("cIsClient").checked = !!(c && c.isClient);
+    document.getElementById("servicesField").style.display = (c && c.isClient) ? "block" : "none";
+    setCheckedServices(c ? c.services : []);
+    document.getElementById("drawerDeleteBtn").style.display = c ? "inline-block" : "none";
+    document.getElementById("drawerLogSection").style.display = c ? "block" : "none";
+    if (c) renderDrawerNotes(c.id);
+    scrim.classList.add("open");
+    drawer.classList.add("open");
+    document.getElementById("cName").focus();
+  }
+  function closeDrawer() {
+    scrim.classList.remove("open");
+    drawer.classList.remove("open");
+    editingClientId = null;
+  }
+  document.getElementById("addClientBtn").addEventListener("click", function () { openDrawer(null); });
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+  scrim.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+
+  document.getElementById("drawerSaveBtn").addEventListener("click", async function () {
+    var name = document.getElementById("cName").value.trim();
+    if (!name) { document.getElementById("cName").focus(); return; }
+    var fields = {
+      name: name,
+      company: document.getElementById("cCompany").value.trim(),
+      email: document.getElementById("cEmail").value.trim(),
+      phone: document.getElementById("cPhone").value.trim(),
+      address: document.getElementById("cAddress").value.trim(),
+      isClient: document.getElementById("cIsClient").checked,
+      services: document.getElementById("cIsClient").checked ? getCheckedServices() : []
+    };
+    try {
+      if (editingClientId) {
+        var updated = await api("/contacts/" + editingClientId, { method: "PUT", body: JSON.stringify(fields) });
+        var c = data.clients.find(function (x) { return x.id === editingClientId; });
+        Object.assign(c, updated);
+      } else {
+        var created = await api("/contacts", { method: "POST", body: JSON.stringify(fields) });
+        data.clients.push(created);
+        editingClientId = created.id;
+        document.getElementById("drawerDeleteBtn").style.display = "inline-block";
+        document.getElementById("drawerLogSection").style.display = "block";
+        document.getElementById("drawerTitle").textContent = created.name;
+        renderDrawerNotes(created.id);
+      }
+      fillClientSelects(); renderClients(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("drawerDeleteBtn").addEventListener("click", async function () {
+    if (!editingClientId) return;
+    if (!confirm("Delete this client? Their logged notes will stay but won't be tagged to anyone.")) return;
+    var id = editingClientId;
+    try {
+      await api("/contacts/" + id, { method: "DELETE" });
+      data.clients = data.clients.filter(function (x) { return x.id !== id; });
+      data.notes.forEach(function (n) { if (n.clientId === id) n.clientId = null; });
+      data.todos.forEach(function (t) { if (t.clientId === id) t.clientId = null; });
+      data.events.forEach(function (e) { if (e.clientId === id) e.clientId = null; });
+      fillClientSelects(); renderClients(); refreshCounts();
+      closeDrawer();
+    } catch (err) { warn(err); }
+  });
+
+  function renderDrawerNotes(clientId) {
+    var notes = data.notes.filter(function (n) { return n.clientId === clientId; }).sort(function (a, b) { return b.createdAt - a.createdAt; });
+    renderNotesList(document.getElementById("drawerNoteList"), notes, false);
+  }
+  document.getElementById("drawerNoteAddBtn").addEventListener("click", async function () {
+    if (!editingClientId) return;
+    var input = document.getElementById("drawerNoteInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    try {
+      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), clientId: editingClientId }) });
+      data.notes.push(created);
+      input.value = "";
+      renderDrawerNotes(editingClientId); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("drawerNoteList").addEventListener("click", async function (e) {
+    var del = e.target.closest("[data-delnote]");
+    if (!del) return;
+    try {
+      var id = del.getAttribute("data-delnote");
+      await api("/notes/" + id, { method: "DELETE" });
+      data.notes = data.notes.filter(function (x) { return x.id !== id; });
+      renderDrawerNotes(editingClientId); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+
+  /* ---------- init ---------- */
+  async function boot() {
+    try {
+      await loadAll();
+    } catch (err) {
+      document.querySelector(".main").innerHTML =
+        '<div class="card boot-error"><strong>Couldn’t load My People.</strong><br>' + esc(err.message) +
+        '<br><br>If this is a fresh deploy, make sure the D1 database is bound (Pages project → Settings → Functions → D1 database bindings, binding name <code>DB</code>) and the schema has been applied.</div>';
+      return;
+    }
+    buildServicesChecklist();
+    fillClientSelects();
+    renderTodos();
+    renderNotes();
+    renderEvents();
+    renderClients();
+    refreshCounts();
+    showView("home");
+  }
+  boot();
+})();
+</script>
