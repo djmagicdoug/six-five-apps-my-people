@@ -22,11 +22,24 @@ function mapContact(row) {
     id: row.id,
     name: row.name,
     company: row.company || "",
+    companyId: row.company_id || null,
     email: row.email || "",
     phone: row.phone || "",
     address: row.address || "",
     isClient: !!row.is_client,
     services: services,
+    archived: !!row.archived,
+    createdAt: row.created_at
+  };
+}
+function mapCompany(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email || "",
+    phone: row.phone || "",
+    address: row.address || "",
+    website: row.website || "",
     archived: !!row.archived,
     createdAt: row.created_at
   };
@@ -59,6 +72,7 @@ function mapNote(row) {
     date: row.date,
     clientId: row.contact_id || null,
     projectId: row.project_id || null,
+    companyId: row.company_id || null,
     createdAt: row.created_at,
     updatedAt: row.updated_at || null
   };
@@ -85,9 +99,9 @@ async function contactsCreate(db, body) {
   var id = newId();
   var now = Date.now();
   await db.prepare(
-    "INSERT INTO contacts (id, name, company, email, phone, address, is_client, services, archived, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)"
+    "INSERT INTO contacts (id, name, company, company_id, email, phone, address, is_client, services, archived, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)"
   ).bind(
-    id, body.name || "", body.company || "", body.email || "", body.phone || "", body.address || "",
+    id, body.name || "", body.company || "", body.companyId || null, body.email || "", body.phone || "", body.address || "",
     body.isClient ? 1 : 0, JSON.stringify(body.services || []), now
   ).run();
   var row = await db.prepare("SELECT * FROM contacts WHERE id = ?").bind(id).first();
@@ -95,9 +109,9 @@ async function contactsCreate(db, body) {
 }
 async function contactsUpdate(db, id, body) {
   await db.prepare(
-    "UPDATE contacts SET name = ?, company = ?, email = ?, phone = ?, address = ?, is_client = ?, services = ? WHERE id = ?"
+    "UPDATE contacts SET name = ?, company = ?, company_id = ?, email = ?, phone = ?, address = ?, is_client = ?, services = ? WHERE id = ?"
   ).bind(
-    body.name || "", body.company || "", body.email || "", body.phone || "", body.address || "",
+    body.name || "", body.company || "", body.companyId || null, body.email || "", body.phone || "", body.address || "",
     body.isClient ? 1 : 0, JSON.stringify(body.services || []), id
   ).run();
   var row = await db.prepare("SELECT * FROM contacts WHERE id = ?").bind(id).first();
@@ -109,6 +123,36 @@ async function contactsDelete(db, id) {
   await db.prepare("UPDATE notes SET contact_id = NULL WHERE contact_id = ?").bind(id).run();
   await db.prepare("UPDATE events SET contact_id = NULL WHERE contact_id = ?").bind(id).run();
   await db.prepare("DELETE FROM contacts WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
+// ---------- companies ----------
+
+async function companiesList(db) {
+  var res = await db.prepare("SELECT * FROM companies WHERE archived = 0 ORDER BY name COLLATE NOCASE").all();
+  return json(res.results.map(mapCompany));
+}
+async function companiesCreate(db, body) {
+  var id = newId();
+  var now = Date.now();
+  await db.prepare(
+    "INSERT INTO companies (id, name, email, phone, address, website, archived, created_at) VALUES (?, ?, ?, ?, ?, ?, 0, ?)"
+  ).bind(id, body.name || "", body.email || "", body.phone || "", body.address || "", body.website || "", now).run();
+  var row = await db.prepare("SELECT * FROM companies WHERE id = ?").bind(id).first();
+  return json(mapCompany(row), 201);
+}
+async function companiesUpdate(db, id, body) {
+  await db.prepare(
+    "UPDATE companies SET name = ?, email = ?, phone = ?, address = ?, website = ? WHERE id = ?"
+  ).bind(body.name || "", body.email || "", body.phone || "", body.address || "", body.website || "", id).run();
+  var row = await db.prepare("SELECT * FROM companies WHERE id = ?").bind(id).first();
+  if (!row) return json({ error: "Not found" }, 404);
+  return json(mapCompany(row));
+}
+async function companiesDelete(db, id) {
+  await db.prepare("UPDATE contacts SET company_id = NULL WHERE company_id = ?").bind(id).run();
+  await db.prepare("UPDATE notes SET company_id = NULL WHERE company_id = ?").bind(id).run();
+  await db.prepare("DELETE FROM companies WHERE id = ?").bind(id).run();
   return json({ ok: true });
 }
 
@@ -181,8 +225,8 @@ async function notesCreate(db, body) {
   var id = newId();
   var now = Date.now();
   await db.prepare(
-    "INSERT INTO notes (id, text, date, contact_id, project_id, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-  ).bind(id, body.text || "", body.date || "", body.clientId || null, body.projectId || null, now).run();
+    "INSERT INTO notes (id, text, date, contact_id, project_id, company_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+  ).bind(id, body.text || "", body.date || "", body.clientId || null, body.projectId || null, body.companyId || null, now).run();
   var row = await db.prepare("SELECT * FROM notes WHERE id = ?").bind(id).first();
   return json(mapNote(row), 201);
 }
@@ -250,6 +294,12 @@ export async function onRequest(context) {
       if (method === "PUT" && id) return await projectsUpdate(db, id, body);
       if (method === "DELETE" && id) return await projectsDelete(db, id);
     }
+    if (resource === "companies") {
+      if (method === "GET" && !id) return await companiesList(db);
+      if (method === "POST" && !id) return await companiesCreate(db, body);
+      if (method === "PUT" && id) return await companiesUpdate(db, id, body);
+      if (method === "DELETE" && id) return await companiesDelete(db, id);
+    }
     if (resource === "todos") {
       if (method === "GET" && !id) return await todosList(db);
       if (method === "POST" && !id) return await todosCreate(db, body);
@@ -272,3 +322,4 @@ export async function onRequest(context) {
     return json({ error: (err && err.message) || String(err) }, 500);
   }
 }
+  
