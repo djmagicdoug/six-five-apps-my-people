@@ -31,6 +31,16 @@ function mapContact(row) {
     createdAt: row.created_at
   };
 }
+function mapProject(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    area: row.area || "",
+    target: row.target === null || row.target === undefined ? null : row.target,
+    archived: !!row.archived,
+    createdAt: row.created_at
+  };
+}
 function mapTodo(row) {
   return {
     id: row.id,
@@ -38,6 +48,7 @@ function mapTodo(row) {
     due: row.due || "",
     done: !!row.done,
     clientId: row.contact_id || null,
+    projectId: row.project_id || null,
     createdAt: row.created_at
   };
 }
@@ -47,7 +58,9 @@ function mapNote(row) {
     text: row.text,
     date: row.date,
     clientId: row.contact_id || null,
-    createdAt: row.created_at
+    projectId: row.project_id || null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at || null
   };
 }
 function mapEvent(row) {
@@ -57,6 +70,7 @@ function mapEvent(row) {
     date: row.date,
     time: row.time || "",
     clientId: row.contact_id || null,
+    projectId: row.project_id || null,
     createdAt: row.created_at
   };
 }
@@ -98,6 +112,39 @@ async function contactsDelete(db, id) {
   return json({ ok: true });
 }
 
+// ---------- projects ----------
+
+async function projectsList(db) {
+  var res = await db.prepare("SELECT * FROM projects WHERE archived = 0 ORDER BY name COLLATE NOCASE").all();
+  return json(res.results.map(mapProject));
+}
+async function projectsCreate(db, body) {
+  var id = newId();
+  var now = Date.now();
+  var target = body.target === "" || body.target === null || body.target === undefined ? null : Number(body.target);
+  await db.prepare(
+    "INSERT INTO projects (id, name, area, target, archived, created_at) VALUES (?, ?, ?, ?, 0, ?)"
+  ).bind(id, body.name || "", body.area || "", target, now).run();
+  var row = await db.prepare("SELECT * FROM projects WHERE id = ?").bind(id).first();
+  return json(mapProject(row), 201);
+}
+async function projectsUpdate(db, id, body) {
+  var target = body.target === "" || body.target === null || body.target === undefined ? null : Number(body.target);
+  await db.prepare(
+    "UPDATE projects SET name = ?, area = ?, target = ? WHERE id = ?"
+  ).bind(body.name || "", body.area || "", target, id).run();
+  var row = await db.prepare("SELECT * FROM projects WHERE id = ?").bind(id).first();
+  if (!row) return json({ error: "Not found" }, 404);
+  return json(mapProject(row));
+}
+async function projectsDelete(db, id) {
+  await db.prepare("UPDATE todos SET project_id = NULL WHERE project_id = ?").bind(id).run();
+  await db.prepare("UPDATE notes SET project_id = NULL WHERE project_id = ?").bind(id).run();
+  await db.prepare("UPDATE events SET project_id = NULL WHERE project_id = ?").bind(id).run();
+  await db.prepare("DELETE FROM projects WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
 // ---------- todos ----------
 
 async function todosList(db) {
@@ -108,8 +155,8 @@ async function todosCreate(db, body) {
   var id = newId();
   var now = Date.now();
   await db.prepare(
-    "INSERT INTO todos (id, text, due, done, contact_id, created_at) VALUES (?, ?, ?, 0, ?, ?)"
-  ).bind(id, body.text || "", body.due || null, body.clientId || null, now).run();
+    "INSERT INTO todos (id, text, due, done, contact_id, project_id, created_at) VALUES (?, ?, ?, 0, ?, ?, ?)"
+  ).bind(id, body.text || "", body.due || null, body.clientId || null, body.projectId || null, now).run();
   var row = await db.prepare("SELECT * FROM todos WHERE id = ?").bind(id).first();
   return json(mapTodo(row), 201);
 }
@@ -134,10 +181,17 @@ async function notesCreate(db, body) {
   var id = newId();
   var now = Date.now();
   await db.prepare(
-    "INSERT INTO notes (id, text, date, contact_id, created_at) VALUES (?, ?, ?, ?, ?)"
-  ).bind(id, body.text || "", body.date || "", body.clientId || null, now).run();
+    "INSERT INTO notes (id, text, date, contact_id, project_id, created_at) VALUES (?, ?, ?, ?, ?, ?)"
+  ).bind(id, body.text || "", body.date || "", body.clientId || null, body.projectId || null, now).run();
   var row = await db.prepare("SELECT * FROM notes WHERE id = ?").bind(id).first();
   return json(mapNote(row), 201);
+}
+async function notesUpdate(db, id, body) {
+  var now = Date.now();
+  await db.prepare("UPDATE notes SET text = ?, updated_at = ? WHERE id = ?").bind(body.text || "", now, id).run();
+  var row = await db.prepare("SELECT * FROM notes WHERE id = ?").bind(id).first();
+  if (!row) return json({ error: "Not found" }, 404);
+  return json(mapNote(row));
 }
 async function notesDelete(db, id) {
   await db.prepare("DELETE FROM notes WHERE id = ?").bind(id).run();
@@ -154,8 +208,8 @@ async function eventsCreate(db, body) {
   var id = newId();
   var now = Date.now();
   await db.prepare(
-    "INSERT INTO events (id, title, date, time, contact_id, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-  ).bind(id, body.title || "", body.date || "", body.time || null, body.clientId || null, now).run();
+    "INSERT INTO events (id, title, date, time, contact_id, project_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+  ).bind(id, body.title || "", body.date || "", body.time || null, body.clientId || null, body.projectId || null, now).run();
   var row = await db.prepare("SELECT * FROM events WHERE id = ?").bind(id).first();
   return json(mapEvent(row), 201);
 }
@@ -190,6 +244,12 @@ export async function onRequest(context) {
       if (method === "PUT" && id) return await contactsUpdate(db, id, body);
       if (method === "DELETE" && id) return await contactsDelete(db, id);
     }
+    if (resource === "projects") {
+      if (method === "GET" && !id) return await projectsList(db);
+      if (method === "POST" && !id) return await projectsCreate(db, body);
+      if (method === "PUT" && id) return await projectsUpdate(db, id, body);
+      if (method === "DELETE" && id) return await projectsDelete(db, id);
+    }
     if (resource === "todos") {
       if (method === "GET" && !id) return await todosList(db);
       if (method === "POST" && !id) return await todosCreate(db, body);
@@ -199,6 +259,7 @@ export async function onRequest(context) {
     if (resource === "notes") {
       if (method === "GET" && !id) return await notesList(db);
       if (method === "POST" && !id) return await notesCreate(db, body);
+      if (method === "PATCH" && id) return await notesUpdate(db, id, body);
       if (method === "DELETE" && id) return await notesDelete(db, id);
     }
     if (resource === "events") {
