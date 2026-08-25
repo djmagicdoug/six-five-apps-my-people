@@ -445,6 +445,7 @@
     <button class="nav-btn" data-view="admin"><span class="nav-icon" aria-hidden="true">&#9776;</span> Admin<span class="nav-count" id="navAdminCount">0</span></button>
     <button class="nav-btn" data-view="clients"><span class="nav-icon" aria-hidden="true">&#9679;</span> Contacts<span class="nav-count" id="navClientsCount">0</span></button>
     <button class="nav-btn" data-view="projects"><span class="nav-icon" aria-hidden="true">&#9638;</span> Projects<span class="nav-count" id="navProjectsCount">0</span></button>
+    <button class="nav-btn" data-view="companies"><span class="nav-icon" aria-hidden="true">&#127970;</span> Companies<span class="nav-count" id="navCompaniesCount">0</span></button>
   </nav>
   <a href="/cdn-cgi/access/logout" class="sidebar-foot">Log out</a>
   <div class="sidebar-foot">my people</div>
@@ -578,6 +579,27 @@
     </div>
   </section>
 
+  <!-- COMPANIES -->
+  <section id="view-companies" style="display:none;">
+    <div class="topbar">
+      <h1>Companies</h1>
+      <button class="btn btn-primary" id="addCompanyBtn">+ Add company</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="companySearch" placeholder="Search by company name">
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="projects" id="companiesTable">
+          <thead>
+            <tr><th>Name</th><th>Website</th><th>Contacts</th><th>Last note</th></tr>
+          </thead>
+          <tbody id="companiesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <!-- Drawer for client add/edit -->
@@ -597,6 +619,10 @@
     <div class="field">
       <label for="cCompany">Company</label>
       <input type="text" id="cCompany" placeholder="Optional">
+    </div>
+    <div class="field">
+      <label for="cCompanyId">Linked company record (optional)</label>
+      <select id="cCompanyId"><option value="">No linked company</option></select>
     </div>
     <div class="field-row">
       <div class="field">
@@ -691,13 +717,66 @@
   </div>
 </div>
 
+<!-- Drawer for company add/edit -->
+<div class="drawer" id="companyDrawer" role="dialog" aria-label="Company detail">
+  <div class="drawer-head">
+    <div>
+      <h2 id="companyDrawerTitle">Add company</h2>
+    </div>
+    <button class="drawer-close" id="companyDrawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <label for="coName">Company name</label>
+      <input type="text" id="coName" placeholder="ABC Realty">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="coEmail">Email</label>
+        <input type="email" id="coEmail">
+      </div>
+      <div class="field">
+        <label for="coPhone">Phone</label>
+        <input type="tel" id="coPhone">
+      </div>
+    </div>
+    <div class="field">
+      <label for="coAddress">Address</label>
+      <input type="text" id="coAddress" placeholder="Optional">
+    </div>
+    <div class="field">
+      <label for="coWebsite">Website</label>
+      <input type="text" id="coWebsite" placeholder="Optional">
+    </div>
+
+    <div id="companyContactsSection" style="display:none;">
+      <div class="drawer-section-title">Contacts at this company</div>
+      <div id="companyContactsList"></div>
+    </div>
+
+    <div id="companyLogSection" style="display:none;">
+      <div class="drawer-section-title">Log</div>
+      <div class="add-row">
+        <input type="text" id="companyNoteInput" placeholder="Agency asked about adding a corkboard listing">
+        <button class="btn btn-primary btn-sm" id="companyNoteAddBtn">Add</button>
+      </div>
+      <div id="companyNoteList" style="margin-top:8px;"></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-text" id="companyDeleteBtn" style="display:none;">Delete company</button>
+    <button class="btn btn-primary" id="companySaveBtn">Save</button>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
   var API = "/api";
-  var data = { clients: [], todos: [], notes: [], events: [], projects: [] };
+  var data = { clients: [], todos: [], notes: [], events: [], projects: [], companies: [] };
   var editingClientId = null;
   var editingProjectId = null;
+  var editingCompanyId = null;
   var SERVICES = ["Snapshot", "Corkboard", "Creatives", "Home Cooking", "DJ", "Digital Business Card"];
 
   /* ---------- API helper ---------- */
@@ -715,9 +794,9 @@
   }
   async function loadAll() {
     var results = await Promise.all([
-      api("/contacts"), api("/todos"), api("/notes"), api("/events"), api("/projects")
+      api("/contacts"), api("/todos"), api("/notes"), api("/events"), api("/projects"), api("/companies")
     ]);
-    data = { clients: results[0], todos: results[1], notes: results[2], events: results[3], projects: results[4] };
+    data = { clients: results[0], todos: results[1], notes: results[2], events: results[3], projects: results[4], companies: results[5] };
   }
 
   function esc(s) {
@@ -778,12 +857,17 @@
     var p = data.projects.find(function (x) { return x.id === id; });
     return p ? p.name : "";
   }
+  function companyName(id) {
+    var co = data.companies.find(function (x) { return x.id === id; });
+    return co ? co.name : "";
+  }
   function warn(err) {
     alert(err && err.message ? err.message : "Something went wrong. Try again.");
   }
-  function linkTag(clientId, projectId) {
+  function linkTag(clientId, projectId, companyId) {
     if (clientId) return '<span class="client-tag">' + esc(clientName(clientId)) + '</span>';
     if (projectId) return '<span class="project-tag">' + esc(projectName(projectId)) + '</span>';
+    if (companyId) return '<span class="project-tag">' + esc(companyName(companyId)) + '</span>';
     return "";
   }
   function parseAssignValue(raw) {
@@ -793,7 +877,7 @@
   }
 
   /* ---------- Navigation ---------- */
-  var views = ["home", "admin", "clients", "projects"];
+  var views = ["home", "admin", "clients", "projects", "companies"];
   function showView(v) {
     views.forEach(function (name) {
       document.getElementById("view-" + name).style.display = name === v ? "block" : "none";
@@ -804,6 +888,7 @@
     if (v === "home") renderHome();
     if (v === "clients") renderClients();
     if (v === "projects") renderProjects();
+    if (v === "companies") renderCompanies();
   }
   document.getElementById("nav").addEventListener("click", function (e) {
     var btn = e.target.closest(".nav-btn");
@@ -851,9 +936,20 @@
     document.getElementById("navAdminCount").textContent = openTodos;
     document.getElementById("navClientsCount").textContent = data.clients.length;
     document.getElementById("navProjectsCount").textContent = data.projects.length;
+    document.getElementById("navCompaniesCount").textContent = data.companies.length;
     document.getElementById("tabTodoCount").textContent = openTodos;
     document.getElementById("tabNotesCount").textContent = data.notes.length;
     document.getElementById("tabCalCount").textContent = data.events.length;
+  }
+
+  /* ---------- Company dropdown (for the Contact drawer) ---------- */
+  function fillCompanySelect() {
+    var sel = document.getElementById("cCompanyId");
+    var current = sel.value;
+    sel.innerHTML = '<option value="">No linked company</option>' + data.companies
+      .slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+      .map(function (co) { return '<option value="' + co.id + '">' + esc(co.name) + '</option>'; }).join("");
+    if (current) sel.value = current;
   }
 
   /* ---------- Services checklist ---------- */
@@ -956,7 +1052,7 @@
       notesEl.innerHTML = '<div class="empty-line">No notes logged yet.</div>';
     } else {
       notesEl.innerHTML = recentNotes.map(function (n) {
-        return '<div class="note-line"><div class="note-text">' + esc(n.text) + linkTag(n.clientId, n.projectId) + '</div>' +
+        return '<div class="note-line"><div class="note-text">' + esc(n.text) + linkTag(n.clientId, n.projectId, n.companyId) + '</div>' +
           '<div class="note-meta">' + fmtShort(n.date) + '</div></div>';
       }).join("");
     }
@@ -1040,7 +1136,7 @@
       return;
     }
     targetEl.innerHTML = notes.map(function (n) {
-      var tag = showTagKind ? linkTag(n.clientId, n.projectId) : "";
+      var tag = showTagKind ? linkTag(n.clientId, n.projectId, n.companyId) : "";
       return '<div class="note-line" data-note="' + n.id + '">' +
         '<div class="note-view">' +
           '<div class="note-text">' + esc(n.text) + tag + '</div>' +
@@ -1243,15 +1339,19 @@
   /* ---------- DRAWER (contact) ---------- */
   var drawer = document.getElementById("drawer");
   var projectDrawer = document.getElementById("projectDrawer");
+  var companyDrawer = document.getElementById("companyDrawer");
   var scrim = document.getElementById("scrim");
 
   function openDrawer(clientId) {
     closeProjectDrawer();
+    closeCompanyDrawer();
     editingClientId = clientId || null;
     var c = clientId ? data.clients.find(function (x) { return x.id === clientId; }) : null;
     document.getElementById("drawerTitle").textContent = c ? c.name : "Add client";
     document.getElementById("cName").value = c ? c.name : "";
     document.getElementById("cCompany").value = c ? c.company || "" : "";
+    fillCompanySelect();
+    document.getElementById("cCompanyId").value = c && c.companyId ? c.companyId : "";
     document.getElementById("cEmail").value = c ? c.email || "" : "";
     document.getElementById("cPhone").value = c ? c.phone || "" : "";
     document.getElementById("cAddress").value = c ? c.address || "" : "";
@@ -1272,11 +1372,12 @@
   }
   document.getElementById("addClientBtn").addEventListener("click", function () { openDrawer(null); });
   document.getElementById("drawerClose").addEventListener("click", closeDrawer);
-  scrim.addEventListener("click", function () { closeDrawer(); closeProjectDrawer(); });
+  scrim.addEventListener("click", function () { closeDrawer(); closeProjectDrawer(); closeCompanyDrawer(); });
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (drawer.classList.contains("open")) closeDrawer();
     if (projectDrawer.classList.contains("open")) closeProjectDrawer();
+    if (companyDrawer.classList.contains("open")) closeCompanyDrawer();
   });
 
   document.getElementById("drawerSaveBtn").addEventListener("click", async function () {
@@ -1285,6 +1386,7 @@
     var fields = {
       name: name,
       company: document.getElementById("cCompany").value.trim(),
+      companyId: document.getElementById("cCompanyId").value || null,
       email: document.getElementById("cEmail").value.trim(),
       phone: document.getElementById("cPhone").value.trim(),
       address: document.getElementById("cAddress").value.trim(),
@@ -1344,6 +1446,7 @@
   /* ---------- DRAWER (project) ---------- */
   function openProjectDrawer(projectId) {
     closeDrawer();
+    closeCompanyDrawer();
     editingProjectId = projectId || null;
     var p = projectId ? data.projects.find(function (x) { return x.id === projectId; }) : null;
     document.getElementById("projectDrawerTitle").textContent = p ? p.name : "Add project";
@@ -1493,6 +1596,148 @@
   });
   bindNoteList(document.getElementById("projectNoteList"), function () { renderProjectDrawerNotes(editingProjectId); refreshCounts(); });
 
+  /* ---------- COMPANIES ---------- */
+  function renderCompanies() {
+    var q = document.getElementById("companySearch").value.trim().toLowerCase();
+    var list = data.companies.filter(function (co) {
+      if (!q) return true;
+      return co.name.toLowerCase().indexOf(q) !== -1;
+    }).slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var body = document.getElementById("companiesBody");
+    if (data.companies.length === 0) {
+      body.innerHTML = '<tr><td colspan="4"><div class="empty-state"><strong>No companies yet</strong>Add one above to start linking contacts to it.</div></td></tr>';
+      return;
+    }
+    if (list.length === 0) {
+      body.innerHTML = '<tr><td colspan="4"><div class="empty-state"><strong>No matches</strong>Try a different search.</div></td></tr>';
+      return;
+    }
+    body.innerHTML = list.map(function (co) {
+      var contactCount = data.clients.filter(function (c) { return c.companyId === co.id; }).length;
+      var lastNote = data.notes.filter(function (n) { return n.companyId === co.id; }).sort(function (a, b) { return b.createdAt - a.createdAt; })[0];
+      return '<tr data-opencompany="' + co.id + '">' +
+        '<td class="cell-name">' + esc(co.name) + '</td>' +
+        '<td>' + (co.website ? esc(co.website) : '<span class="cell-sub">—</span>') + '</td>' +
+        '<td>' + contactCount + '</td>' +
+        '<td>' + (lastNote ? fmtShort(lastNote.date) : '<span class="cell-sub">no notes yet</span>') + '</td>' +
+        '</tr>';
+    }).join("");
+  }
+  document.getElementById("companySearch").addEventListener("input", renderCompanies);
+  document.getElementById("companiesBody").addEventListener("click", function (e) {
+    var row = e.target.closest("[data-opencompany]");
+    if (row) openCompanyDrawer(row.getAttribute("data-opencompany"));
+  });
+
+  function openCompanyDrawer(companyId) {
+    closeDrawer();
+    closeProjectDrawer();
+    editingCompanyId = companyId || null;
+    var co = companyId ? data.companies.find(function (x) { return x.id === companyId; }) : null;
+    document.getElementById("companyDrawerTitle").textContent = co ? co.name : "Add company";
+    document.getElementById("coName").value = co ? co.name : "";
+    document.getElementById("coEmail").value = co ? co.email || "" : "";
+    document.getElementById("coPhone").value = co ? co.phone || "" : "";
+    document.getElementById("coAddress").value = co ? co.address || "" : "";
+    document.getElementById("coWebsite").value = co ? co.website || "" : "";
+    document.getElementById("companyDeleteBtn").style.display = co ? "inline-block" : "none";
+    document.getElementById("companyContactsSection").style.display = co ? "block" : "none";
+    document.getElementById("companyLogSection").style.display = co ? "block" : "none";
+    if (co) {
+      renderCompanyContacts(co.id);
+      renderCompanyNotes(co.id);
+    }
+    scrim.classList.add("open");
+    companyDrawer.classList.add("open");
+    document.getElementById("coName").focus();
+  }
+  function closeCompanyDrawer() {
+    scrim.classList.remove("open");
+    companyDrawer.classList.remove("open");
+    editingCompanyId = null;
+  }
+  document.getElementById("addCompanyBtn").addEventListener("click", function () { openCompanyDrawer(null); });
+  document.getElementById("companyDrawerClose").addEventListener("click", closeCompanyDrawer);
+
+  document.getElementById("companySaveBtn").addEventListener("click", async function () {
+    var name = document.getElementById("coName").value.trim();
+    if (!name) { document.getElementById("coName").focus(); return; }
+    var fields = {
+      name: name,
+      email: document.getElementById("coEmail").value.trim(),
+      phone: document.getElementById("coPhone").value.trim(),
+      address: document.getElementById("coAddress").value.trim(),
+      website: document.getElementById("coWebsite").value.trim()
+    };
+    try {
+      if (editingCompanyId) {
+        var updated = await api("/companies/" + editingCompanyId, { method: "PUT", body: JSON.stringify(fields) });
+        var co = data.companies.find(function (x) { return x.id === editingCompanyId; });
+        Object.assign(co, updated);
+      } else {
+        var created = await api("/companies", { method: "POST", body: JSON.stringify(fields) });
+        data.companies.push(created);
+        editingCompanyId = created.id;
+        document.getElementById("companyDeleteBtn").style.display = "inline-block";
+        document.getElementById("companyContactsSection").style.display = "block";
+        document.getElementById("companyLogSection").style.display = "block";
+        document.getElementById("companyDrawerTitle").textContent = created.name;
+        renderCompanyContacts(created.id);
+        renderCompanyNotes(created.id);
+      }
+      fillCompanySelect(); renderCompanies(); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("companyDeleteBtn").addEventListener("click", async function () {
+    if (!editingCompanyId) return;
+    if (!confirm("Delete this company? Linked contacts will stay but won't be tagged to it anymore.")) return;
+    var id = editingCompanyId;
+    try {
+      await api("/companies/" + id, { method: "DELETE" });
+      data.companies = data.companies.filter(function (x) { return x.id !== id; });
+      data.clients.forEach(function (c) { if (c.companyId === id) c.companyId = null; });
+      data.notes.forEach(function (n) { if (n.companyId === id) n.companyId = null; });
+      fillCompanySelect(); renderCompanies(); refreshCounts();
+      closeCompanyDrawer();
+    } catch (err) { warn(err); }
+  });
+
+  function renderCompanyContacts(companyId) {
+    var contacts = data.clients.filter(function (c) { return c.companyId === companyId; }).slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var el = document.getElementById("companyContactsList");
+    if (contacts.length === 0) {
+      el.innerHTML = '<div class="empty-line">No contacts linked yet. Open a contact and set its linked company to add one here.</div>';
+      return;
+    }
+    el.innerHTML = contacts.map(function (c) {
+      return '<div class="todo-row"><div class="todo-body"><div class="todo-text" style="cursor:pointer;" data-opencontact="' + c.id + '">' + esc(c.name) +
+        (c.isClient ? '<span class="client-badge" style="margin-left:6px;">Client</span>' : '') + '</div>' +
+        '<div class="todo-meta">' + esc(c.email || c.phone || "") + '</div></div></div>';
+    }).join("");
+  }
+  document.getElementById("companyContactsList").addEventListener("click", function (e) {
+    var open = e.target.closest("[data-opencontact]");
+    if (open) openDrawer(open.getAttribute("data-opencontact"));
+  });
+
+  function renderCompanyNotes(companyId) {
+    var notes = data.notes.filter(function (n) { return n.companyId === companyId; }).sort(function (a, b) { return b.createdAt - a.createdAt; });
+    renderNotesList(document.getElementById("companyNoteList"), notes, false);
+  }
+  document.getElementById("companyNoteAddBtn").addEventListener("click", async function () {
+    if (!editingCompanyId) return;
+    var input = document.getElementById("companyNoteInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    try {
+      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), companyId: editingCompanyId }) });
+      data.notes.push(created);
+      input.value = "";
+      renderCompanyNotes(editingCompanyId); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  bindNoteList(document.getElementById("companyNoteList"), function () { renderCompanyNotes(editingCompanyId); refreshCounts(); });
+
   /* ---------- init ---------- */
   async function boot() {
     try {
@@ -1505,11 +1750,13 @@
     }
     buildServicesChecklist();
     fillAssignSelects();
+    fillCompanySelect();
     renderTodos();
     renderNotes();
     renderEvents();
     renderClients();
     renderProjects();
+    renderCompanies();
     refreshCounts();
     showView("home");
   }
