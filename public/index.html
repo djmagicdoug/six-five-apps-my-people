@@ -17,10 +17,10 @@
     --danger-wash: rgba(156,63,52,0.1);
     --success: #4c7a4c;
     --success-wash: rgba(76,122,76,0.12);
-    --sidebar-bg: #363428;
-    --sidebar-text: #f4f1ea;
-    --sidebar-text-soft: #b6ac98;
-    --sidebar-active: rgba(179,153,91,0.22);
+    --sidebar-bg: #1f4e4d;
+    --sidebar-text: #ffffff;
+    --sidebar-text-soft: #d7ece9;
+    --sidebar-active: rgba(255,255,255,0.18);
     --scrim: rgba(30,28,22,0.45);
     --shadow: 0 12px 28px -8px rgba(54,52,40,0.22);
     --radius: 10px;
@@ -43,10 +43,10 @@
       --danger-wash: rgba(201,106,92,0.16);
       --success: #7ba97b;
       --success-wash: rgba(123,169,123,0.16);
-      --sidebar-bg: #16140f;
-      --sidebar-text: #f1ede4;
-      --sidebar-text-soft: #a49a87;
-      --sidebar-active: rgba(203,176,122,0.2);
+      --sidebar-bg: #123332;
+      --sidebar-text: #ffffff;
+      --sidebar-text-soft: #bfe0dc;
+      --sidebar-active: rgba(255,255,255,0.14);
       --scrim: rgba(0,0,0,0.55);
       --shadow: 0 12px 28px -8px rgba(0,0,0,0.5);
       color-scheme: dark;
@@ -68,10 +68,10 @@
     --danger-wash: rgba(201,106,92,0.16);
     --success: #7ba97b;
     --success-wash: rgba(123,169,123,0.16);
-    --sidebar-bg: #16140f;
-    --sidebar-text: #f1ede4;
-    --sidebar-text-soft: #a49a87;
-    --sidebar-active: rgba(203,176,122,0.2);
+    --sidebar-bg: #123332;
+    --sidebar-text: #ffffff;
+    --sidebar-text-soft: #bfe0dc;
+    --sidebar-active: rgba(255,255,255,0.14);
     --scrim: rgba(0,0,0,0.55);
     --shadow: 0 12px 28px -8px rgba(0,0,0,0.5);
     color-scheme: dark;
@@ -92,7 +92,7 @@
   h1 { font-size: 26px; text-wrap: balance; }
   h2 { font-size: 18px; }
   button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
-  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea {
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea {
     width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -154,6 +154,10 @@
     display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
     color: var(--orange); background: var(--orange-wash); padding: 2px 8px; border-radius: 999px;
   }
+  .area-pill {
+    display: inline-block; font-size: 11px; font-weight: 600; color: var(--ink-soft);
+    background: var(--surface-2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px;
+  }
 
   /* Sidebar */
   .sidebar {
@@ -174,7 +178,7 @@
     font-size: 10.5px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--sidebar-text-soft);
     margin-top: 3px;
   }
   .nav { display: flex; flex-direction: column; gap: 3px; }
@@ -193,26 +197,28 @@
     font-weight: 500;
   }
   .nav-btn:hover { color: var(--sidebar-text); }
-  .nav-btn.active { background: var(--sidebar-active); color: var(--gold); font-weight: 700; }
+  .nav-btn.active { background: var(--sidebar-active); color: var(--sidebar-text); font-weight: 700; }
   .nav-icon { width: 17px; text-align: center; flex-shrink: 0; }
   .nav-count {
     margin-left: auto;
     font-size: 11.5px;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.14);
     padding: 2px 7px;
     border-radius: 999px;
     font-variant-numeric: tabular-nums;
   }
-  .nav-btn.active .nav-count { background: rgba(179,153,91,0.28); }
+  .nav-btn.active .nav-count { background: rgba(255,255,255,0.24); }
   .sidebar-foot {
     margin-top: auto;
     font-size: 11px;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--sidebar-text-soft);
-    opacity: 0.6;
+    opacity: 0.85;
     padding: 0 10px;
   }
+  a.sidebar-foot { display: block; text-decoration: none; cursor: pointer; }
+  a.sidebar-foot:hover { opacity: 1; text-decoration: underline; }
 
   /* Main */
   .main { flex: 1 1 auto; min-width: 0; padding: 30px 36px 64px; max-width: 980px; }
@@ -284,12 +290,23 @@
   .note-line:last-child { border-bottom: none; }
   .note-text { font-size: 14px; white-space: pre-wrap; word-break: break-word; }
   .note-meta { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+  .note-edit textarea { width: 100%; min-height: 60px; margin-top: 6px; font-size: 14px; }
   .client-tag {
     display: inline-block;
     font-size: 11px;
     font-weight: 600;
     color: var(--gold);
     background: var(--gold-wash);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-left: 6px;
+  }
+  .project-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    background: var(--orange-wash);
     padding: 2px 8px;
     border-radius: 999px;
     margin-left: 6px;
@@ -317,6 +334,7 @@
   .add-row input[type="text"] { flex: 2 1 220px; }
   .add-row input[type="date"] { flex: 1 1 140px; }
   .add-row input[type="time"] { flex: 1 1 110px; }
+  .add-row input[type="number"] { flex: 1 1 100px; }
   .add-row select { flex: 1 1 150px; }
 
   .list-group-label {
@@ -352,17 +370,17 @@
   .event-date .m { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-faint); }
   .event-title { font-size: 14.5px; margin-top: 2px; }
 
-  /* Clients table */
+  /* Clients / Projects table */
   .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   .toolbar input[type="text"] { flex: 1 1 240px; }
-  table.clients { width: 100%; border-collapse: collapse; }
-  table.clients th {
+  table.clients, table.projects { width: 100%; border-collapse: collapse; }
+  table.clients th, table.projects th {
     text-align: left; font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 600; padding: 0 10px 8px; border-bottom: 1px solid var(--border);
   }
-  table.clients td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
-  table.clients tbody tr { cursor: pointer; }
-  table.clients tbody tr:hover td { background: var(--surface-2); }
+  table.clients td, table.projects td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+  table.clients tbody tr, table.projects tbody tr { cursor: pointer; }
+  table.clients tbody tr:hover td, table.projects tbody tr:hover td { background: var(--surface-2); }
   .cell-name { font-weight: 600; }
   .cell-sub { font-size: 12.5px; color: var(--ink-faint); margin-top: 2px; }
   .table-wrap { overflow-x: auto; }
@@ -389,6 +407,7 @@
   .drawer-body { padding: 18px 22px; overflow-y: auto; flex: 1 1 auto; }
   .drawer-foot { padding: 14px 22px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .drawer-section-title { font-family: Georgia, serif; font-size: 15px; margin: 22px 0 10px; }
+  .progress-line { font-size: 13px; color: var(--ink-soft); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; }
 
   .empty-state { text-align: center; padding: 44px 20px; color: var(--ink-faint); }
   .empty-state strong { display: block; font-family: Georgia, serif; font-size: 17px; color: var(--ink); margin-bottom: 6px; }
@@ -398,8 +417,9 @@
   ::selection { background: var(--gold-wash); }
   @media (prefers-reduced-motion: reduce) {
     .drawer, .scrim { transition: none; }
-  } 
-    @media (max-width: 640px) {
+  }
+
+  @media (max-width: 640px) {
     body { flex-direction: column; }
     .sidebar {
       position: sticky; top: 0; width: 100%; height: auto; flex: 0 0 auto;
@@ -424,8 +444,9 @@
     <button class="nav-btn" data-view="home"><span class="nav-icon" aria-hidden="true">&#8962;</span> Home</button>
     <button class="nav-btn" data-view="admin"><span class="nav-icon" aria-hidden="true">&#9776;</span> Admin<span class="nav-count" id="navAdminCount">0</span></button>
     <button class="nav-btn" data-view="clients"><span class="nav-icon" aria-hidden="true">&#9679;</span> Contacts<span class="nav-count" id="navClientsCount">0</span></button>
+    <button class="nav-btn" data-view="projects"><span class="nav-icon" aria-hidden="true">&#9638;</span> Projects<span class="nav-count" id="navProjectsCount">0</span></button>
   </nav>
-    <a href="/cdn-cgi/access/logout" class="sidebar-foot" style="display:block;text-decoration:none;">Log out</a>
+  <a href="/cdn-cgi/access/logout" class="sidebar-foot">Log out</a>
   <div class="sidebar-foot">my people</div>
 </div>
 
@@ -472,7 +493,7 @@
         <div class="add-row">
           <input type="text" id="todoInput" placeholder="Call Hannah about the profile listing">
           <input type="date" id="todoDate">
-          <select id="todoClient"><option value="">No client</option></select>
+          <select id="todoClient"><option value="">No link</option></select>
           <button class="btn btn-primary" id="todoAddBtn">Add</button>
         </div>
       </div>
@@ -485,7 +506,7 @@
       <div class="card">
         <div class="add-row">
           <input type="text" id="noteInput" placeholder="Talked to Erik, he liked the new pricing">
-          <select id="noteClient"><option value="">No client</option></select>
+          <select id="noteClient"><option value="">No link</option></select>
           <button class="btn btn-primary" id="noteAddBtn">Add</button>
         </div>
       </div>
@@ -500,7 +521,7 @@
           <input type="text" id="eventInput" placeholder="Coffee with Carlos">
           <input type="date" id="eventDate">
           <input type="time" id="eventTime">
-          <select id="eventClient"><option value="">No client</option></select>
+          <select id="eventClient"><option value="">No link</option></select>
           <button class="btn btn-primary" id="eventAddBtn">Add</button>
         </div>
       </div>
@@ -531,6 +552,27 @@
             <tr><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>Services</th><th>Last note</th></tr>
           </thead>
           <tbody id="clientsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="view-projects" style="display:none;">
+    <div class="topbar">
+      <h1>Projects</h1>
+      <button class="btn btn-primary" id="addProjectBtn">+ Add project</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="projectSearch" placeholder="Search by project name or area">
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="projects" id="projectsTable">
+          <thead>
+            <tr><th>Name</th><th>Area</th><th>Progress</th><th>Open to-dos</th><th>Last note</th></tr>
+          </thead>
+          <tbody id="projectsBody"></tbody>
         </table>
       </div>
     </div>
@@ -597,12 +639,65 @@
   </div>
 </div>
 
+<!-- Drawer for project add/edit -->
+<div class="drawer" id="projectDrawer" role="dialog" aria-label="Project detail">
+  <div class="drawer-head">
+    <div>
+      <h2 id="projectDrawerTitle">Add project</h2>
+    </div>
+    <button class="drawer-close" id="projectDrawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <label for="pName">Project name</label>
+      <input type="text" id="pName" placeholder="Creatives content (8)">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="pArea">Area</label>
+        <input type="text" id="pArea" placeholder="Snapshot, Digital Card, 65 Apps...">
+      </div>
+      <div class="field">
+        <label for="pTarget">Target (optional)</label>
+        <input type="number" id="pTarget" placeholder="8" min="0">
+      </div>
+    </div>
+    <div class="field" id="projectProgressField" style="display:none;">
+      <div class="progress-line" id="projectProgressLine"></div>
+    </div>
+
+    <div id="projectTodoSection" style="display:none;">
+      <div class="drawer-section-title">To-dos</div>
+      <div class="add-row">
+        <input type="text" id="projectTodoInput" placeholder="Get 3 more creatives on the phone">
+        <input type="date" id="projectTodoDate">
+        <button class="btn btn-primary btn-sm" id="projectTodoAddBtn">Add</button>
+      </div>
+      <div id="projectTodoList" style="margin-top:8px;"></div>
+    </div>
+
+    <div id="projectLogSection" style="display:none;">
+      <div class="drawer-section-title">Log</div>
+      <div class="add-row">
+        <input type="text" id="projectNoteInput" placeholder="Signed the third recipe today">
+        <button class="btn btn-primary btn-sm" id="projectNoteAddBtn">Add</button>
+      </div>
+      <div id="projectNoteList" style="margin-top:8px;"></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-text" id="projectDeleteBtn" style="display:none;">Delete project</button>
+    <button class="btn btn-primary" id="projectSaveBtn">Save</button>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
   var API = "/api";
-  var data = { clients: [], todos: [], notes: [], events: [] };
+  var data = { clients: [], todos: [], notes: [], events: [], projects: [] };
   var editingClientId = null;
+  var editingProjectId = null;
   var SERVICES = ["Snapshot", "Corkboard", "Creatives", "Home Cooking", "DJ", "Digital Business Card"];
 
   /* ---------- API helper ---------- */
@@ -620,9 +715,9 @@
   }
   async function loadAll() {
     var results = await Promise.all([
-      api("/contacts"), api("/todos"), api("/notes"), api("/events")
+      api("/contacts"), api("/todos"), api("/notes"), api("/events"), api("/projects")
     ]);
-    data = { clients: results[0], todos: results[1], notes: results[2], events: results[3] };
+    data = { clients: results[0], todos: results[1], notes: results[2], events: results[3], projects: results[4] };
   }
 
   function esc(s) {
@@ -679,12 +774,26 @@
     var c = data.clients.find(function (x) { return x.id === id; });
     return c ? c.name : "";
   }
+  function projectName(id) {
+    var p = data.projects.find(function (x) { return x.id === id; });
+    return p ? p.name : "";
+  }
   function warn(err) {
     alert(err && err.message ? err.message : "Something went wrong. Try again.");
   }
+  function linkTag(clientId, projectId) {
+    if (clientId) return '<span class="client-tag">' + esc(clientName(clientId)) + '</span>';
+    if (projectId) return '<span class="project-tag">' + esc(projectName(projectId)) + '</span>';
+    return "";
+  }
+  function parseAssignValue(raw) {
+    if (raw && raw.indexOf("c:") === 0) return { clientId: raw.slice(2), projectId: null };
+    if (raw && raw.indexOf("p:") === 0) return { clientId: null, projectId: raw.slice(2) };
+    return { clientId: null, projectId: null };
+  }
 
   /* ---------- Navigation ---------- */
-  var views = ["home", "admin", "clients"];
+  var views = ["home", "admin", "clients", "projects"];
   function showView(v) {
     views.forEach(function (name) {
       document.getElementById("view-" + name).style.display = name === v ? "block" : "none";
@@ -694,6 +803,7 @@
     });
     if (v === "home") renderHome();
     if (v === "clients") renderClients();
+    if (v === "projects") renderProjects();
   }
   document.getElementById("nav").addEventListener("click", function (e) {
     var btn = e.target.closest(".nav-btn");
@@ -718,14 +828,19 @@
   document.getElementById("todayLabel").textContent = todayLabelText;
   document.getElementById("todayLabel2").textContent = todayLabelText;
 
-  /* ---------- Client dropdown population ---------- */
-  function fillClientSelects() {
+  /* ---------- Assign-to dropdown population (Contacts + Projects) ---------- */
+  function fillAssignSelects() {
     var selects = [document.getElementById("todoClient"), document.getElementById("noteClient"), document.getElementById("eventClient")];
+    var contactOpts = data.clients.slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+      .map(function (c) { return '<option value="c:' + c.id + '">' + esc(c.name) + '</option>'; }).join("");
+    var projectOpts = data.projects.slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+      .map(function (p) { return '<option value="p:' + p.id + '">' + esc(p.name) + '</option>'; }).join("");
+    var html = '<option value="">No link</option>';
+    if (contactOpts) html += '<optgroup label="Contacts">' + contactOpts + '</optgroup>';
+    if (projectOpts) html += '<optgroup label="Projects">' + projectOpts + '</optgroup>';
     selects.forEach(function (sel) {
       var current = sel.value;
-      sel.innerHTML = '<option value="">No client</option>' + data.clients
-        .slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
-        .map(function (c) { return '<option value="' + c.id + '">' + esc(c.name) + '</option>'; }).join("");
+      sel.innerHTML = html;
       if (current) sel.value = current;
     });
   }
@@ -735,6 +850,7 @@
     var openTodos = data.todos.filter(function (t) { return !t.done; }).length;
     document.getElementById("navAdminCount").textContent = openTodos;
     document.getElementById("navClientsCount").textContent = data.clients.length;
+    document.getElementById("navProjectsCount").textContent = data.projects.length;
     document.getElementById("tabTodoCount").textContent = openTodos;
     document.getElementById("tabNotesCount").textContent = data.notes.length;
     document.getElementById("tabCalCount").textContent = data.events.length;
@@ -800,10 +916,12 @@
 
     var agendaItems = [];
     data.todos.filter(function (t) { return !t.done && t.due && t.due <= today; }).forEach(function (t) {
-      agendaItems.push({ kind: t.due < today ? "overdue" : "today", sort: t.due, text: t.text, meta: (t.due < today ? "overdue, was due " : "due ") + fmtShort(t.due) + (t.clientId ? " · " + clientName(t.clientId) : "") });
+      var link = t.clientId ? " · " + clientName(t.clientId) : (t.projectId ? " · " + projectName(t.projectId) : "");
+      agendaItems.push({ kind: t.due < today ? "overdue" : "today", sort: t.due, text: t.text, meta: (t.due < today ? "overdue, was due " : "due ") + fmtShort(t.due) + link });
     });
     data.events.filter(function (e) { return e.date === today; }).forEach(function (e) {
-      agendaItems.push({ kind: "event", sort: e.date + " " + (e.time || "00:00"), text: e.title, meta: (e.time ? fmtTime(e.time) : "today") + (e.clientId ? " · " + clientName(e.clientId) : "") });
+      var link = e.clientId ? " · " + clientName(e.clientId) : (e.projectId ? " · " + projectName(e.projectId) : "");
+      agendaItems.push({ kind: "event", sort: e.date + " " + (e.time || "00:00"), text: e.title, meta: (e.time ? fmtTime(e.time) : "today") + link });
     });
     data.clients.filter(function (c) { return c.isClient; }).forEach(function (c) {
       (c.services || []).forEach(function (s) {
@@ -838,8 +956,7 @@
       notesEl.innerHTML = '<div class="empty-line">No notes logged yet.</div>';
     } else {
       notesEl.innerHTML = recentNotes.map(function (n) {
-        return '<div class="note-line"><div class="note-text">' + esc(n.text) +
-          (n.clientId ? '<span class="client-tag">' + esc(clientName(n.clientId)) + '</span>' : '') + '</div>' +
+        return '<div class="note-line"><div class="note-text">' + esc(n.text) + linkTag(n.clientId, n.projectId) + '</div>' +
           '<div class="note-meta">' + fmtShort(n.date) + '</div></div>';
       }).join("");
     }
@@ -872,7 +989,7 @@
         return '<div class="todo-row' + (t.done ? " done" : "") + '">' +
           '<button class="todo-check" data-toggle="' + t.id + '" aria-label="Mark done">' + (t.done ? "&#10003;" : "") + '</button>' +
           '<div class="todo-body"><div class="todo-text">' + esc(t.text) + '</div>' +
-          '<div class="todo-meta' + overdueClass + '">' + (t.due ? fmtShort(t.due) : "no due date") + (t.clientId ? " · " + esc(clientName(t.clientId)) : "") + '</div></div>' +
+          '<div class="todo-meta' + overdueClass + '">' + (t.due ? fmtShort(t.due) : "no due date") + (t.clientId ? " · " + esc(clientName(t.clientId)) : (t.projectId ? " · " + esc(projectName(t.projectId)) : "")) + '</div></div>' +
           '<button class="btn-text" data-del="' + t.id + '">remove</button>' +
           '</div>';
       }).join("");
@@ -887,9 +1004,9 @@
     var text = input.value.trim();
     if (!text) { input.focus(); return; }
     var due = document.getElementById("todoDate").value;
-    var clientId = document.getElementById("todoClient").value || null;
+    var link = parseAssignValue(document.getElementById("todoClient").value);
     try {
-      var created = await api("/todos", { method: "POST", body: JSON.stringify({ text: text, due: due, clientId: clientId }) });
+      var created = await api("/todos", { method: "POST", body: JSON.stringify({ text: text, due: due, clientId: link.clientId, projectId: link.projectId }) });
       data.todos.push(created);
       input.value = ""; document.getElementById("todoDate").value = ""; document.getElementById("todoClient").value = "";
       renderTodos(); refreshCounts();
@@ -916,17 +1033,67 @@
     } catch (err) { warn(err); }
   });
 
-  /* ---------- NOTES ---------- */
-  function renderNotesList(targetEl, notes, allowClientTag) {
+  /* ---------- NOTES (shared render + edit/delete wiring) ---------- */
+  function renderNotesList(targetEl, notes, showTagKind) {
     if (notes.length === 0) {
       targetEl.innerHTML = '<div class="empty-line">Nothing logged yet.</div>';
       return;
     }
     targetEl.innerHTML = notes.map(function (n) {
-      return '<div class="note-line"><div class="note-text">' + esc(n.text) +
-        (allowClientTag && n.clientId ? '<span class="client-tag">' + esc(clientName(n.clientId)) + '</span>' : '') + '</div>' +
-        '<div class="note-meta">' + fmtShort(n.date) + ' &nbsp;&middot;&nbsp; <button class="btn-text" data-delnote="' + n.id + '" style="padding:0;">remove</button></div></div>';
+      var tag = showTagKind ? linkTag(n.clientId, n.projectId) : "";
+      return '<div class="note-line" data-note="' + n.id + '">' +
+        '<div class="note-view">' +
+          '<div class="note-text">' + esc(n.text) + tag + '</div>' +
+          '<div class="note-meta">' + fmtShort(n.date) + (n.updatedAt ? ' (edited)' : '') +
+            ' &nbsp;&middot;&nbsp; <button class="btn-text" data-editnote="' + n.id + '" style="padding:0;">edit</button>' +
+            ' &nbsp;&middot;&nbsp; <button class="btn-text" data-delnote="' + n.id + '" style="padding:0;">remove</button></div>' +
+        '</div>' +
+        '<div class="note-edit" style="display:none;">' +
+          '<textarea class="note-edit-input">' + esc(n.text) + '</textarea>' +
+          '<div style="margin-top:6px; display:flex; gap:8px;">' +
+            '<button class="btn btn-primary btn-sm" data-savenote="' + n.id + '">Save</button>' +
+            '<button class="btn-text" data-canceledit="' + n.id + '">Cancel</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
     }).join("");
+  }
+  function bindNoteList(el, onChanged) {
+    el.addEventListener("click", async function (e) {
+      var edit = e.target.closest("[data-editnote]");
+      var cancel = e.target.closest("[data-canceledit]");
+      var save = e.target.closest("[data-savenote]");
+      var del = e.target.closest("[data-delnote]");
+      try {
+        if (edit) {
+          var line = edit.closest(".note-line");
+          line.querySelector(".note-view").style.display = "none";
+          line.querySelector(".note-edit").style.display = "block";
+          line.querySelector(".note-edit-input").focus();
+        }
+        if (cancel) {
+          var line2 = cancel.closest(".note-line");
+          line2.querySelector(".note-edit").style.display = "none";
+          line2.querySelector(".note-view").style.display = "block";
+        }
+        if (save) {
+          var id = save.getAttribute("data-savenote");
+          var line3 = save.closest(".note-line");
+          var text = line3.querySelector(".note-edit-input").value.trim();
+          if (!text) return;
+          var updated = await api("/notes/" + id, { method: "PATCH", body: JSON.stringify({ text: text }) });
+          var n = data.notes.find(function (x) { return x.id === id; });
+          if (n) { n.text = updated.text; n.updatedAt = updated.updatedAt; }
+          onChanged();
+        }
+        if (del) {
+          var delId = del.getAttribute("data-delnote");
+          await api("/notes/" + delId, { method: "DELETE" });
+          data.notes = data.notes.filter(function (x) { return x.id !== delId; });
+          onChanged();
+        }
+      } catch (err) { warn(err); }
+    });
   }
   function renderNotes() {
     var sorted = data.notes.slice().sort(function (a, b) { return b.createdAt - a.createdAt; });
@@ -936,24 +1103,15 @@
     var input = document.getElementById("noteInput");
     var text = input.value.trim();
     if (!text) { input.focus(); return; }
-    var clientId = document.getElementById("noteClient").value || null;
+    var link = parseAssignValue(document.getElementById("noteClient").value);
     try {
-      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), clientId: clientId }) });
+      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), clientId: link.clientId, projectId: link.projectId }) });
       data.notes.push(created);
       input.value = ""; document.getElementById("noteClient").value = "";
       renderNotes(); refreshCounts();
     } catch (err) { warn(err); }
   });
-  document.getElementById("noteList").addEventListener("click", async function (e) {
-    var del = e.target.closest("[data-delnote]");
-    if (!del) return;
-    try {
-      var id = del.getAttribute("data-delnote");
-      await api("/notes/" + id, { method: "DELETE" });
-      data.notes = data.notes.filter(function (x) { return x.id !== id; });
-      renderNotes(); refreshCounts();
-    } catch (err) { warn(err); }
-  });
+  bindNoteList(document.getElementById("noteList"), function () { renderNotes(); refreshCounts(); });
 
   /* ---------- CALENDAR ---------- */
   function renderEvents() {
@@ -972,7 +1130,7 @@
       var d = parts.length === 3 ? parts[2] : "--";
       var m = parts.length === 3 ? new Date(Number(parts[0]), Number(parts[1]) - 1, 1).toLocaleDateString(undefined, { month: "short" }) : "";
       return '<div class="event-row"><div class="event-date"><div class="d">' + d + '</div><div class="m">' + m + '</div></div>' +
-        '<div style="flex:1;"><div class="event-title">' + esc(ev.title) + (ev.clientId ? '<span class="client-tag">' + esc(clientName(ev.clientId)) + '</span>' : '') + '</div>' +
+        '<div style="flex:1;"><div class="event-title">' + esc(ev.title) + linkTag(ev.clientId, ev.projectId) + '</div>' +
         (ev.time ? '<div class="note-meta">' + fmtTime(ev.time) + '</div>' : '') + '</div>' +
         '<button class="btn-text" data-delevent="' + ev.id + '">remove</button></div>';
     }).join("");
@@ -983,9 +1141,9 @@
     var date = document.getElementById("eventDate").value;
     if (!title || !date) { (title ? document.getElementById("eventDate") : input).focus(); return; }
     var time = document.getElementById("eventTime").value;
-    var clientId = document.getElementById("eventClient").value || null;
+    var link = parseAssignValue(document.getElementById("eventClient").value);
     try {
-      var created = await api("/events", { method: "POST", body: JSON.stringify({ title: title, date: date, time: time, clientId: clientId }) });
+      var created = await api("/events", { method: "POST", body: JSON.stringify({ title: title, date: date, time: time, clientId: link.clientId, projectId: link.projectId }) });
       data.events.push(created);
       input.value = ""; document.getElementById("eventDate").value = ""; document.getElementById("eventTime").value = ""; document.getElementById("eventClient").value = "";
       renderEvents(); refreshCounts();
@@ -1044,11 +1202,51 @@
     if (row) openDrawer(row.getAttribute("data-open"));
   });
 
-  /* ---------- DRAWER ---------- */
+  /* ---------- PROJECTS ---------- */
+  function renderProjects() {
+    var q = document.getElementById("projectSearch").value.trim().toLowerCase();
+    var list = data.projects.filter(function (p) {
+      if (!q) return true;
+      var blob = [p.name, p.area].join(" ").toLowerCase();
+      return blob.indexOf(q) !== -1;
+    }).slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var body = document.getElementById("projectsBody");
+    if (data.projects.length === 0) {
+      body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><strong>No projects yet</strong>Add one above to start tracking it.</div></td></tr>';
+      return;
+    }
+    if (list.length === 0) {
+      body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><strong>No matches</strong>Try a different search.</div></td></tr>';
+      return;
+    }
+    body.innerHTML = list.map(function (p) {
+      var todos = data.todos.filter(function (t) { return t.projectId === p.id; });
+      var doneCount = todos.filter(function (t) { return t.done; }).length;
+      var openCount = todos.length - doneCount;
+      var progress = p.target ? (doneCount + " of " + p.target) : (doneCount + " done");
+      var lastNote = data.notes.filter(function (n) { return n.projectId === p.id; }).sort(function (a, b) { return b.createdAt - a.createdAt; })[0];
+      return '<tr data-openproject="' + p.id + '">' +
+        '<td class="cell-name">' + esc(p.name) + '</td>' +
+        '<td>' + (p.area ? '<span class="area-pill">' + esc(p.area) + '</span>' : '<span class="cell-sub">—</span>') + '</td>' +
+        '<td>' + esc(progress) + '</td>' +
+        '<td>' + openCount + '</td>' +
+        '<td>' + (lastNote ? fmtShort(lastNote.date) : '<span class="cell-sub">no notes yet</span>') + '</td>' +
+        '</tr>';
+    }).join("");
+  }
+  document.getElementById("projectSearch").addEventListener("input", renderProjects);
+  document.getElementById("projectsBody").addEventListener("click", function (e) {
+    var row = e.target.closest("[data-openproject]");
+    if (row) openProjectDrawer(row.getAttribute("data-openproject"));
+  });
+
+  /* ---------- DRAWER (contact) ---------- */
   var drawer = document.getElementById("drawer");
+  var projectDrawer = document.getElementById("projectDrawer");
   var scrim = document.getElementById("scrim");
 
   function openDrawer(clientId) {
+    closeProjectDrawer();
     editingClientId = clientId || null;
     var c = clientId ? data.clients.find(function (x) { return x.id === clientId; }) : null;
     document.getElementById("drawerTitle").textContent = c ? c.name : "Add client";
@@ -1074,8 +1272,12 @@
   }
   document.getElementById("addClientBtn").addEventListener("click", function () { openDrawer(null); });
   document.getElementById("drawerClose").addEventListener("click", closeDrawer);
-  scrim.addEventListener("click", closeDrawer);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+  scrim.addEventListener("click", function () { closeDrawer(); closeProjectDrawer(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (drawer.classList.contains("open")) closeDrawer();
+    if (projectDrawer.classList.contains("open")) closeProjectDrawer();
+  });
 
   document.getElementById("drawerSaveBtn").addEventListener("click", async function () {
     var name = document.getElementById("cName").value.trim();
@@ -1103,7 +1305,7 @@
         document.getElementById("drawerTitle").textContent = created.name;
         renderDrawerNotes(created.id);
       }
-      fillClientSelects(); renderClients(); refreshCounts();
+      fillAssignSelects(); renderClients(); refreshCounts();
     } catch (err) { warn(err); }
   });
   document.getElementById("drawerDeleteBtn").addEventListener("click", async function () {
@@ -1116,7 +1318,7 @@
       data.notes.forEach(function (n) { if (n.clientId === id) n.clientId = null; });
       data.todos.forEach(function (t) { if (t.clientId === id) t.clientId = null; });
       data.events.forEach(function (e) { if (e.clientId === id) e.clientId = null; });
-      fillClientSelects(); renderClients(); refreshCounts();
+      fillAssignSelects(); renderClients(); refreshCounts();
       closeDrawer();
     } catch (err) { warn(err); }
   });
@@ -1137,16 +1339,159 @@
       renderDrawerNotes(editingClientId); refreshCounts();
     } catch (err) { warn(err); }
   });
-  document.getElementById("drawerNoteList").addEventListener("click", async function (e) {
-    var del = e.target.closest("[data-delnote]");
-    if (!del) return;
+  bindNoteList(document.getElementById("drawerNoteList"), function () { renderDrawerNotes(editingClientId); refreshCounts(); });
+
+  /* ---------- DRAWER (project) ---------- */
+  function openProjectDrawer(projectId) {
+    closeDrawer();
+    editingProjectId = projectId || null;
+    var p = projectId ? data.projects.find(function (x) { return x.id === projectId; }) : null;
+    document.getElementById("projectDrawerTitle").textContent = p ? p.name : "Add project";
+    document.getElementById("pName").value = p ? p.name : "";
+    document.getElementById("pArea").value = p ? p.area || "" : "";
+    document.getElementById("pTarget").value = p && p.target !== null && p.target !== undefined ? p.target : "";
+    document.getElementById("projectDeleteBtn").style.display = p ? "inline-block" : "none";
+    document.getElementById("projectTodoSection").style.display = p ? "block" : "none";
+    document.getElementById("projectLogSection").style.display = p ? "block" : "none";
+    document.getElementById("projectProgressField").style.display = p ? "block" : "none";
+    if (p) {
+      renderProjectProgress(p.id);
+      renderProjectDrawerTodos(p.id);
+      renderProjectDrawerNotes(p.id);
+    }
+    scrim.classList.add("open");
+    projectDrawer.classList.add("open");
+    document.getElementById("pName").focus();
+  }
+  function closeProjectDrawer() {
+    scrim.classList.remove("open");
+    projectDrawer.classList.remove("open");
+    editingProjectId = null;
+  }
+  document.getElementById("addProjectBtn").addEventListener("click", function () { openProjectDrawer(null); });
+  document.getElementById("projectDrawerClose").addEventListener("click", closeProjectDrawer);
+
+  function renderProjectProgress(projectId) {
+    var p = data.projects.find(function (x) { return x.id === projectId; });
+    if (!p) return;
+    var todos = data.todos.filter(function (t) { return t.projectId === projectId; });
+    var doneCount = todos.filter(function (t) { return t.done; }).length;
+    var text = p.target ? (doneCount + " of " + p.target + " done") : (doneCount + " of " + todos.length + " to-dos done");
+    document.getElementById("projectProgressLine").textContent = text;
+  }
+
+  document.getElementById("projectSaveBtn").addEventListener("click", async function () {
+    var name = document.getElementById("pName").value.trim();
+    if (!name) { document.getElementById("pName").focus(); return; }
+    var fields = {
+      name: name,
+      area: document.getElementById("pArea").value.trim(),
+      target: document.getElementById("pTarget").value.trim()
+    };
     try {
-      var id = del.getAttribute("data-delnote");
-      await api("/notes/" + id, { method: "DELETE" });
-      data.notes = data.notes.filter(function (x) { return x.id !== id; });
-      renderDrawerNotes(editingClientId); refreshCounts();
+      if (editingProjectId) {
+        var updated = await api("/projects/" + editingProjectId, { method: "PUT", body: JSON.stringify(fields) });
+        var p = data.projects.find(function (x) { return x.id === editingProjectId; });
+        Object.assign(p, updated);
+      } else {
+        var created = await api("/projects", { method: "POST", body: JSON.stringify(fields) });
+        data.projects.push(created);
+        editingProjectId = created.id;
+        document.getElementById("projectDeleteBtn").style.display = "inline-block";
+        document.getElementById("projectTodoSection").style.display = "block";
+        document.getElementById("projectLogSection").style.display = "block";
+        document.getElementById("projectProgressField").style.display = "block";
+        document.getElementById("projectDrawerTitle").textContent = created.name;
+        renderProjectProgress(created.id);
+        renderProjectDrawerTodos(created.id);
+        renderProjectDrawerNotes(created.id);
+      }
+      fillAssignSelects(); renderProjects(); refreshCounts();
     } catch (err) { warn(err); }
   });
+  document.getElementById("projectDeleteBtn").addEventListener("click", async function () {
+    if (!editingProjectId) return;
+    if (!confirm("Delete this project? Its to-dos and notes will stay but won't be tagged to anything.")) return;
+    var id = editingProjectId;
+    try {
+      await api("/projects/" + id, { method: "DELETE" });
+      data.projects = data.projects.filter(function (x) { return x.id !== id; });
+      data.notes.forEach(function (n) { if (n.projectId === id) n.projectId = null; });
+      data.todos.forEach(function (t) { if (t.projectId === id) t.projectId = null; });
+      data.events.forEach(function (e) { if (e.projectId === id) e.projectId = null; });
+      fillAssignSelects(); renderProjects(); refreshCounts();
+      closeProjectDrawer();
+    } catch (err) { warn(err); }
+  });
+
+  function renderProjectDrawerTodos(projectId) {
+    var todos = data.todos.filter(function (t) { return t.projectId === projectId; })
+      .slice().sort(function (a, b) { if (!!a.done !== !!b.done) return a.done ? 1 : -1; return (a.due || "9999") < (b.due || "9999") ? -1 : 1; });
+    var el = document.getElementById("projectTodoList");
+    if (todos.length === 0) {
+      el.innerHTML = '<div class="empty-line">Nothing yet.</div>';
+      return;
+    }
+    el.innerHTML = todos.map(function (t) {
+      return '<div class="todo-row' + (t.done ? " done" : "") + '">' +
+        '<button class="todo-check" data-ptoggle="' + t.id + '" aria-label="Mark done">' + (t.done ? "&#10003;" : "") + '</button>' +
+        '<div class="todo-body"><div class="todo-text">' + esc(t.text) + '</div>' +
+        '<div class="todo-meta">' + (t.due ? fmtShort(t.due) : "no due date") + '</div></div>' +
+        '<button class="btn-text" data-pdel="' + t.id + '">remove</button>' +
+        '</div>';
+    }).join("");
+  }
+  document.getElementById("projectTodoAddBtn").addEventListener("click", async function () {
+    if (!editingProjectId) return;
+    var input = document.getElementById("projectTodoInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    var due = document.getElementById("projectTodoDate").value;
+    try {
+      var created = await api("/todos", { method: "POST", body: JSON.stringify({ text: text, due: due, projectId: editingProjectId }) });
+      data.todos.push(created);
+      input.value = ""; document.getElementById("projectTodoDate").value = "";
+      renderProjectDrawerTodos(editingProjectId); renderProjectProgress(editingProjectId); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  document.getElementById("projectTodoList").addEventListener("click", async function (e) {
+    var toggle = e.target.closest("[data-ptoggle]");
+    var del = e.target.closest("[data-pdel]");
+    try {
+      if (toggle) {
+        var id = toggle.getAttribute("data-ptoggle");
+        var t = data.todos.find(function (x) { return x.id === id; });
+        if (!t) return;
+        var updated = await api("/todos/" + id, { method: "PATCH", body: JSON.stringify({ done: !t.done }) });
+        t.done = updated.done;
+        renderProjectDrawerTodos(editingProjectId); renderProjectProgress(editingProjectId); refreshCounts();
+      }
+      if (del) {
+        var delId = del.getAttribute("data-pdel");
+        await api("/todos/" + delId, { method: "DELETE" });
+        data.todos = data.todos.filter(function (x) { return x.id !== delId; });
+        renderProjectDrawerTodos(editingProjectId); renderProjectProgress(editingProjectId); refreshCounts();
+      }
+    } catch (err) { warn(err); }
+  });
+
+  function renderProjectDrawerNotes(projectId) {
+    var notes = data.notes.filter(function (n) { return n.projectId === projectId; }).sort(function (a, b) { return b.createdAt - a.createdAt; });
+    renderNotesList(document.getElementById("projectNoteList"), notes, false);
+  }
+  document.getElementById("projectNoteAddBtn").addEventListener("click", async function () {
+    if (!editingProjectId) return;
+    var input = document.getElementById("projectNoteInput");
+    var text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    try {
+      var created = await api("/notes", { method: "POST", body: JSON.stringify({ text: text, date: todayISO(), projectId: editingProjectId }) });
+      data.notes.push(created);
+      input.value = "";
+      renderProjectDrawerNotes(editingProjectId); refreshCounts();
+    } catch (err) { warn(err); }
+  });
+  bindNoteList(document.getElementById("projectNoteList"), function () { renderProjectDrawerNotes(editingProjectId); refreshCounts(); });
 
   /* ---------- init ---------- */
   async function boot() {
@@ -1155,15 +1500,16 @@
     } catch (err) {
       document.querySelector(".main").innerHTML =
         '<div class="card boot-error"><strong>Couldn’t load My People.</strong><br>' + esc(err.message) +
-        '<br><br>If this is a fresh deploy, make sure the D1 database is bound (Pages project → Settings → Functions → D1 database bindings, binding name <code>DB</code>) and the schema has been applied.</div>';
+        '<br><br>If this is a fresh deploy, make sure the D1 database is bound (Pages project → Settings → Functions → D1 database bindings, binding name <code>DB</code>) and the schema (including the projects migration) has been applied.</div>';
       return;
     }
     buildServicesChecklist();
-    fillClientSelects();
+    fillAssignSelects();
     renderTodos();
     renderNotes();
     renderEvents();
     renderClients();
+    renderProjects();
     refreshCounts();
     showView("home");
   }
